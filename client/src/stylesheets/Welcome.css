@@ -1,0 +1,61 @@
+#welcome-parent{
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/Reddit_logo2.png");
+    background-size: 150px;
+    background-repeat: repeat;
+}
+
+#welcome-container{
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 33%;
+    margin-top: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#welcome-text{
+    font-size: 3rem;
+    color: #FF5700;
+    text-align: center;
+    margin-top: 8%;
+    margin-bottom: 8%;
+    
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+#welcome-div{
+    width: 100%;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-link{
+    background-color: #E5EBEE;
+    border-radius: 15px;
+    width: 100%;
+    margin: 0% 15% 4% 15%;
+}
+
+.welcome-options{
+    color: black;
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.clickables_group3 {
+    transition: 0.3s ease-in-out;
+}
+
+.clickables_group3:hover {
+    background-color: #FF5700 !important;
+    cursor: pointer;
+    transition: 0.5s !important;
+}

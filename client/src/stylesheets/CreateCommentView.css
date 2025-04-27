@@ -1,0 +1,66 @@
+#create-comment-view{
+    display: flex;
+    flex-direction: column;
+    font-family: "IBM Plex Sans", sans-serif;
+    padding-left: 2%;
+    padding-right: 2%;
+    height: 100%;
+}
+
+#create-comment-input-div{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 70%;
+    margin-top: 1%;
+}
+
+#create-comment-view-title{
+    font-size: 2rem;
+    color: #FF5700;
+    border-bottom: 1px solid #747F84;
+    margin-bottom: 0%;
+    padding-bottom: .25%;
+}
+
+.create-comment-input-container{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2%;
+    width: fit-content;
+}
+
+.comment-label{
+    font-size: 1.2rem;
+}
+
+.create-comment-input-field{
+    width: 56rem;
+    min-height: 2rem;
+    border-radius: 8px;
+    border: none;
+    font-family: "IBM Plex Sans", sans-serif;
+    outline-color: transparent;
+    background-color: #E6E9EC;
+    padding-left: .5%;
+    box-sizing: border-box;
+}
+
+#create-comment-content{
+    height: 100px;
+    resize: none;
+}
+
+#submit-comment-button{
+    border-radius: 8px;
+    width: 10rem;
+    min-height: 3rem;
+    max-height: 3rem;
+    border: none;
+}
+
+#submit-comment-button:hover{
+    cursor: pointer;
+    transition: 0.5s;
+    background-color: #C0C9CE;
+}

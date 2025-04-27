@@ -1,0 +1,93 @@
+.banner {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    position: fixed;
+    margin: none;
+    padding: none;
+    width: 100%;
+}
+
+#top-left{
+    display: flex;
+}
+
+#reddit-logo{
+    width: 4rem;
+    height: 2.25rem;
+    margin-top: 1.67rem;
+}
+
+#reddit-logo-clickable-button{
+    all: unset;
+    display: inline;
+    color: inherit;
+    text-decoration: inherit;
+    cursor: pointer;
+    height: 0%;
+}
+
+#reddit-logo-clickable-button:hover{
+    cursor: pointer;
+}
+
+#title{
+    font-family: "reddit sans", serif;
+    font-size: 2rem;
+    color: #FF5700;
+    margin-block-start: .67em;
+    margin-block-end: .67em;
+}
+
+#title:hover{
+    cursor: pointer;
+}
+
+a:visited, a:link, a:active, a:hover {
+    text-decoration: none;
+}
+
+
+#banner-button-container{
+    align-items: center;
+}
+
+#new-post-button {
+    border-radius: 20px;
+    border-color: transparent;
+    height: 50%;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+#new-post-button:hover {
+    background-color: #FF5700;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+#profile-button{
+    border-radius: 20px;
+    border-color: transparent;
+    height: 50%;
+    margin: 1.5rem;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+#search-bar{
+    display: flex;
+    border-radius: 20px;
+    flex: 1;
+    width: 100%;
+    height: 75%;
+    font-family: "IBM Plex Sans", sans-serif;
+    align-items: center;
+}
+
+form{
+    height: 100%;
+}
+
+search{
+    margin-top: 1.5rem;
+    width: 30%;
+}
