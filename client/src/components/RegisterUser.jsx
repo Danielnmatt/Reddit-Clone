@@ -25,7 +25,8 @@ const RegisterUser = (props) => {
         
         if (!email || email.replaceAll("@", "").length !== email.length - 1) {
             tmpErrors += "Valid email must be entered. ";
-        } else {
+        }
+        else{
             try {
                 const res = await axios.get(`http://127.0.0.1:8000/users/email/${email}`);
                 if (res.data && res.data.length > 0) {
@@ -38,7 +39,8 @@ const RegisterUser = (props) => {
         
         if (!displayName) {
             tmpErrors += "Valid display name must be entered. ";
-        } else {
+        }
+        else{
             try {
                 const res = await axios.get(`http://127.0.0.1:8000/users/displayName/${displayName}`);
                 if (res.data && res.data.length > 0) {
@@ -53,7 +55,7 @@ const RegisterUser = (props) => {
             tmpErrors += "Valid password must be entered. ";
             
             if (password.includes(firstName) || password.includes(lastName) || password.includes(displayName) || password.includes(email.substring(0, email.indexOf("@")))) {
-                tmpErrors += "Password must not include first name, last name, display name, or email. ";
+                tmpErrors += "Password must not include first name, last name, display name, or email.";
             }
         }
         
@@ -73,7 +75,7 @@ const RegisterUser = (props) => {
             
             try {
                 const res = await axios.post("http://127.0.0.1:8000/users/", newUser);
-                props.userHandlers.setUserID(res.data.url.replace('users/', ""));
+                //props.userHandlers.setUserID(res.data.url.replace('users/', "")); think this shouldn't be here    BANANAS
                 navigate('/');
             } catch (e) {
                 console.error(e);

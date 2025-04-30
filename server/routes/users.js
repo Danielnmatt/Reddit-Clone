@@ -31,6 +31,27 @@ router.post('/', async (req, res) =>{
     }
 });
 
+//Attempt to log-in user
+router.post('/comparepassword/:userID', async (req, res) => {
+    try{
+        const plaintextPassword = req.body.password;
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const passwordHash = await bcrypt.hash(plaintextPassword, salt);
+        const user = await User.find({_id: req.params.userID});
+        if(user.password === passwordHash){
+            res.status(200).json({ message: "Success : CORRECT PASSWORD" });
+            return;
+        }
+        res.status(200).json({ message: "Failure : WRONG PASSWORD" });
+        return;
+    }
+    catch(e){
+        res.status(500).send({error: "Logging in User failed."});
+        return;
+    }
+})
+
 //Get User by ID
 router.get('/:userID', async (req, res) =>{
     try{

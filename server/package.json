@@ -14,7 +14,7 @@
     "cors": "^2.8.5",
     "eslint-plugin-only-warn": "^1.1.0",
     "express": "^5.1.0",
-    "mongoose": "^8.14.0",
+    "mongoose": "^8.14.1",
     "nodemon": "^3.1.10"
   },
   "devDependencies": {

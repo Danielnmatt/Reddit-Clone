@@ -9,6 +9,7 @@ const Comment = require('./models/comments');
 const Community = require('./models/communities');
 const LinkFlair = require('./models/linkflairs');
 const Post = require('./models/posts');
+const User = require('./models/users');//   BANANAS
 
 const commentRouter = require('./routes/comments');
 const communityRouter = require('./routes/communities');
@@ -35,7 +36,8 @@ mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
             const communities = await Community.find({});
             const linkFlairs = await LinkFlair.find({});
             const posts = await Post.find({});
-            res.send({comments, communities, linkFlairs, posts});
+            const users = await User.find({});//    BANANAS
+            res.send({comments, communities, linkFlairs, posts, users});
         }
         catch(err){
             res.status(500).send({error: "Getting data failed."});
