@@ -27,6 +27,7 @@ export default function Phreddit() {
 //get rid of temptemptemptemp at the end
 //COME BACK TO ALERTS
 //length restriction on account details ??
+//notice : search for `BANANAS` for points to take note of
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Banner from './banner.jsx'
