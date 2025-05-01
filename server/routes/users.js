@@ -35,24 +35,18 @@ router.post('/', async (req, res) =>{
 router.post('/comparepassword/:userID', async (req, res) => {
     try{
         const plaintextPassword = req.body.password;
-        const saltRounds = 10;
-        const salt = await bcrypt.genSalt(saltRounds);
-        const passwordHash = await bcrypt.hash(plaintextPassword, salt);
-        const user = await User.find({_id: req.params.userID});
+        const user = await User.findById(req.params.userID);
 
-        console.log(plaintextPassword);
-        console.log(passwordHash);
-        if(user && user.password === passwordHash){
-            res.send(true);
-            //res.status(200).json({ message: "Success : CORRECT PASSWORD" });
+        if(!user){
+            res.status(404).send({ error: "User not found" });
             return;
         }
-        res.send(false);
-        //res.status(200).json({ message: "Failure : WRONG PASSWORD" });
-        return;
+
+        const isMatch = await bcrypt.compare(plaintextPassword, user.password);
+        res.send(isMatch);
     }
     catch(e){
-        res.status(500).send({error: "Logging in User failed."});
+        res.status(500).send({ error: "Logging in User failed." });
         return;
     }
 })

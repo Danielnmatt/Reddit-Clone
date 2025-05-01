@@ -26,6 +26,7 @@ export default function Phreddit() {
 //old stuff pasted in
 //get rid of temptemptemptemp at the end
 //COME BACK TO ALERTS
+//length restriction on account details ??
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Banner from './banner.jsx'

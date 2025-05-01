@@ -20,17 +20,17 @@ const RegisterUser = (props) => {
         let tmpErrors = "";
         
         if (!firstName || !lastName) {
-            tmpErrors += "First name / last name must be entered. ";
+            tmpErrors += "First name / last name must be entered.\n";
         }
         
         if (!email || email.replaceAll("@", "").length !== email.length - 1) {
-            tmpErrors += "Valid email must be entered. ";
+            tmpErrors += "Valid email must be entered.\n";
         }
         else{
             try {
                 const res = await axios.get(`http://127.0.0.1:8000/users/email/${email}`);
                 if (res.data && res.data.length > 0) {
-                    tmpErrors += "Duplicate emails are not permitted. ";
+                    tmpErrors += "Duplicate emails are not permitted.\n";
                 }
             } catch (e) {
                 console.error(e);
@@ -38,13 +38,13 @@ const RegisterUser = (props) => {
         }
         
         if (!displayName) {
-            tmpErrors += "Valid display name must be entered. ";
+            tmpErrors += "Valid display name must be entered.\n";
         }
         else{
             try {
                 const res = await axios.get(`http://127.0.0.1:8000/users/displayName/${displayName}`);
                 if (res.data && res.data.length > 0) {
-                    tmpErrors += "Duplicate display names are not permitted. ";
+                    tmpErrors += "Duplicate display names are not permitted.\n";
                 }
             } catch (e) {
                 console.error(e);
@@ -52,15 +52,16 @@ const RegisterUser = (props) => {
         }
         
         if (!password || !confirmPassword || password !== confirmPassword) {
-            tmpErrors += "Valid password must be entered. ";
+            tmpErrors += "Valid password must be entered.\n";
             
             if (password.includes(firstName) || password.includes(lastName) || password.includes(displayName) || password.includes(email.substring(0, email.indexOf("@")))) {
-                tmpErrors += "Password must not include first name, last name, display name, or email.";
+                tmpErrors += "Password must not include first name, last name, display name, or email.\n";
             }
         }
         
         // update the error state and abort if there are errors
         if (tmpErrors) {
+            tmpErrors = (tmpErrors.slice(-1) === '\n') ? (tmpErrors.substring(0, tmpErrors.length - 1)) : tmpErrors;
             setErrors(tmpErrors);
             return;
         }
