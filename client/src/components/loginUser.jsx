@@ -1,6 +1,6 @@
 import {useNavigate} from 'react-router-dom'
 import '../stylesheets/App.css'
-import '../stylesheets/RegisterUser.css'
+import '../stylesheets/LoginUser.css'
 import {useState} from 'react'
 import axios from 'axios'
 
@@ -60,11 +60,11 @@ const LoginUser = (props) => {
     };
     
     return(
-        <div id="register-parent">
-            <div id="register-container">
-                <h1 id="register-text" className="h1-fixer">LOGGING IN USER</h1>
-                <div id="register-div">
-                    <form id="register-user-form">
+        <div id="login-parent">
+            <div id="login-container">
+                <h1 id="login-text" className="h1-fixer">LOGGING IN USER</h1>
+                <div id="login-div">
+                    <form id="login-user-form">
                         <div className="user-input-container">
                             <label htmlFor="email-input">Email&nbsp;<span className="red-stars">*</span></label>
                             <input onChange={(e) => setEmail(e.target.value)} type="text" id="email-input" className="user-input-field" placeholder="johncena@johnny.com..." maxLength="40" required />
@@ -74,7 +74,7 @@ const LoginUser = (props) => {
                             <input onChange={(e) => setPassword(e.target.value)} type="text" id="password-input" className="user-input-field" placeholder="ucantCme123..." maxLength="40" required />
                         </div>
                         <p id="error-msgs">{errors}</p>
-                        <button onClick={login} id="sign-up-button" type="submit">Login</button>
+                        <button onClick={login} id="login-button" type="submit">Login</button>
                     </form>
                 </div>
             </div>

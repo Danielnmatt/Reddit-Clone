@@ -48,7 +48,8 @@ export default function Phreddit(props) {
         });
     }, []);
 
-    console.log(props)
+    console.log("LOOK HERE1!!!!");
+    console.log(props.userHandlers.userID);
 
     const [communities, setCommunities] = useState([]);
     const [linkFlairs, setLinkFlairs] = useState([]);

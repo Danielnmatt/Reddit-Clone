@@ -21,7 +21,7 @@ const Banner = (props) => {
     
     const localClickHelper2 = () => {
         if(props.allData.userID === null){
-            navigate('/')
+            navigate('/');
         }
         else{
             props.allUpdaters.setSearchTerms("");
@@ -72,10 +72,10 @@ const Banner = (props) => {
                 </form>
             </search>
             <div id="banner-button-container">
-                <button id="new-post-button" className="clickables_group2" type="button" onClick={localClickHelper} style={{backgroundColor: props.allData.selectedItem === "new-post-button" ? "#FF5700" : "#E5EBEE"}}>
+                <button id="new-post-button" className="clickables_group2" type="button" onClick={localClickHelper} style={{backgroundColor: props.allData.userID === null ? "#747F84" : (props.allData.selectedItem === "new-post-button" ? "#FF5700" : "#E5EBEE")}}>
                     Create New Post
                 </button>
-                <button id="profile-button" className="clickables_group2" type="button" onClick={handleProfiles} style={{backgroundColor: props.allData.selectedItem === "profile-button" ? "#FF5700" : "#E5EBEE"}}>
+                <button id="profile-button" className="clickables_group2" type="button" onClick={handleProfiles} disabled={props.allData.userID} style={{backgroundColor: props.allData.selectedItem === "profile-button" ? "#FF5700" : "#E5EBEE"}}>
                     Profile
                 </button>
             </div>

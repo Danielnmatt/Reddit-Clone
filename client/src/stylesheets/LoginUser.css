@@ -1,0 +1,86 @@
+#login-parent{
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/Reddit_logo2.png");
+    background-size: cover;
+    background-repeat: repeat;
+}
+
+#login-container{
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 33%;
+    margin-top: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#login-text{
+    font-size: 3rem;
+    color: #FF5700;
+    text-align: center;
+    margin-top: 8%;
+    margin-bottom: 8%;
+    
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+#login-div{
+    width: 100%;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#login-user-form{
+    width: 100%;
+    margin: 0% 0% 0% 0%;
+    padding: 0% 0% 0% 0%;
+}
+
+.user-input-container{
+    width: 95%;
+    margin-bottom: 1.5%;
+}
+
+.user-input-field{
+    width: 100%;
+    min-height: 2rem;
+    border-radius: 8px;
+    border: none;
+    font-family: "IBM Plex Sans", sans-serif;
+    outline-color: transparent;
+    background-color: #E6E9EC;
+    padding-left: .5%;
+    resize: none;
+    box-sizing: border-box;
+}
+
+#error-msgs {
+    color: red;
+    text-align: center;
+    white-space: pre;
+}
+
+#login-button{
+    width: 33%;
+    align-items: center;
+    
+    border-radius: 8px;
+    min-height: 3rem;
+    max-height: 3rem;
+    margin-top: 3.5%;
+    margin-bottom: 4%;
+    border: none;
+}
+
+#login-button:hover{
+    cursor: pointer;
+    transition: 0.5s;
+    background-color: #C0C9CE;
+}

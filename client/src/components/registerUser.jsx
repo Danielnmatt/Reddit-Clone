@@ -38,7 +38,7 @@ const RegisterUser = (props) => {
         }
         
         if (!displayName) {
-            tmpErrors += "Valid display name must be entered.\n";
+            tmpErrors += "Display name must be entered.\n";
         }
         else{
             try {
@@ -50,13 +50,15 @@ const RegisterUser = (props) => {
                 console.error(e);
             }
         }
-        
-        if (!password || !confirmPassword || password !== confirmPassword) {
-            tmpErrors += "Valid password must be entered.\n";
-            
-            if (password.includes(firstName) || password.includes(lastName) || password.includes(displayName) || password.includes(email.substring(0, email.indexOf("@")))) {
-                tmpErrors += "Password must not include first name, last name, display name, or email.\n";
-            }
+
+        if(!password || !confirmPassword){
+            tmpErrors += "Password must be entered.\n";
+        }
+        else if(password !== confirmPassword){
+            tmpErrors += "Passwords must match.\n";
+        }
+        else if(password.includes(firstName) || password.includes(lastName) || password.includes(displayName) || password.includes(email.substring(0, email.indexOf("@")))){
+            tmpErrors += "Password must not include name, display name, or email.\n";
         }
         
         // update the error state and abort if there are errors
@@ -76,7 +78,7 @@ const RegisterUser = (props) => {
             
             try {
                 const res = await axios.post("http://127.0.0.1:8000/users/", newUser);
-                //props.userHandlers.setUserID(res.data.url.replace('users/', "")); think this shouldn't be here    BANANAS
+                //props.userHandlers.setUserID(res.data.url.replace('users/', "")); //think this shouldn't be here    BANANAS
                 navigate('/');
             } catch (e) {
                 console.error(e);
