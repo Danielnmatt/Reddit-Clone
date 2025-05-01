@@ -32,7 +32,7 @@ const LoginUser = (props) => {
                     console.log(userID);
                     try{
                         const res1_5 = await axios.post(`http://127.0.0.1:8000/users/comparepassword/${userID}`, {password: password});
-                        console.log(res1_5);
+                        console.log(res1_5.data);
                     }
                     catch(e){
                         console.log("FUCK");

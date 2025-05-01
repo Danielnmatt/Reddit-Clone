@@ -39,11 +39,16 @@ router.post('/comparepassword/:userID', async (req, res) => {
         const salt = await bcrypt.genSalt(saltRounds);
         const passwordHash = await bcrypt.hash(plaintextPassword, salt);
         const user = await User.find({_id: req.params.userID});
-        if(user.password === passwordHash){
-            res.status(200).json({ message: "Success : CORRECT PASSWORD" });
+
+        console.log(plaintextPassword);
+        console.log(passwordHash);
+        if(user && user.password === passwordHash){
+            res.send(true);
+            //res.status(200).json({ message: "Success : CORRECT PASSWORD" });
             return;
         }
-        res.status(200).json({ message: "Failure : WRONG PASSWORD" });
+        res.send(false);
+        //res.status(200).json({ message: "Failure : WRONG PASSWORD" });
         return;
     }
     catch(e){

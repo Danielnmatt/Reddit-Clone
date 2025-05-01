@@ -2,9 +2,9 @@
 // ************** DEFINE YOUR REACT COMPONENTS in ./components directory **************
 import './stylesheets/App.css';
 import Phreddit from './components/phreddit.js'
-import Welcome from './components/Welcome.jsx'
-import RegisterUser from './components/RegisterUser.jsx';
-import LoginUser from './components/LoginUser.jsx';
+import Welcome from './components/welcome.jsx'
+import RegisterUser from './components/registerUser.jsx';
+import LoginUser from './components/loginUser.jsx';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {useState} from 'react'
 
