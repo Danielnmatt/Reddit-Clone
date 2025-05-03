@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/users');
 const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken");
 
 //Get all Users
 router.get('/', async (req, res) =>{
@@ -31,6 +32,36 @@ router.post('/', async (req, res) =>{
     }
 });
 
+router.post('/login', async (req, res) => {
+    try{
+        const email = req.body.email;
+        const plaintextPassword = req.body.password;
+        const user = User.findOne({email: email});
+        if(!user){
+            res.status(404).send({error: "User not found."});
+            return;
+        }
+        const isMatch = await bcrypt.compare(plaintextPassword, user.password);
+        if(!isMatch){
+            res.status(404).send({error: "Incorrect password."});
+            return;
+        }
+
+        const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET);
+        res.cookie("token", token, {
+            httpOnly: true, secure: true, sameSite: "none"}).status(200).json({
+                success: true,
+                user: {
+                    displayName: user.displayName,
+                    email: user.email
+                }
+            }).send();
+    }
+    catch(e){
+        res.status(400).send({error: e});
+    }
+})
+
 //Attempt to log-in user
 router.post('/comparepassword/:userID', async (req, res) => {
     try{
@@ -38,16 +69,29 @@ router.post('/comparepassword/:userID', async (req, res) => {
         const user = await User.findById(req.params.userID);
 
         if(!user){
-            res.status(404).send({ error: "User not found" });
+            res.status(404).send({error: "User not found"});
             return;
         }
 
         const isMatch = await bcrypt.compare(plaintextPassword, user.password);
-        res.send(isMatch);
+
+        if(!isMatch){
+            res.status(404).send({error: "Wrong password"});
+            return;
+        }
+        const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET);
+
+        res.cookie("token", token, {
+            httpOnly: true, secure: true, sameSite: "none"}).status(200).json({
+                success: true,
+                user: {
+                    displayName: user.displayName,
+                    email: user.email
+                }
+            }).send();
     }
     catch(e){
         res.status(500).send({ error: "Logging in User failed." });
-        return;
     }
 })
 

@@ -21,32 +21,57 @@ const LoginUser = (props) => {
         }
         else{
             try {
-                const res = await axios.get(`http://127.0.0.1:8000/users/email/${email}`);
-                if (!res.data || res.data.length == 0) {//incorrect email
-                    //tmpErrors += `No account matching the email \" ${email} \" has been found.\n`;
-                    tmpErrors += "Incorrect email or password.\n"
+                
+                const res = await axios.post("http://127.0.0.1:8000/users/login/", {email: email, password: password});
+                if(!res.data){
+                    tmpErrors += "Incorrect email or password.\n";
                 }
-                else{
-                    const user = res.data[0];
-                    userID = user.url.replace("users/", "");
 
-                    try{
-                        const res2 = await axios.post(`http://127.0.0.1:8000/users/comparepassword/${userID}`, {password: password});
-                        if(!res2.data){
-                            tmpErrors += "Incorrect email or password.\n"
-                        }
+                /*
+                
+                try {
+                    const token = req.cookies.token;
+                    if (!token) {
+                        return res.status(401).json({errorMessage: "Unauthorized"})
                     }
-                    catch(e){
-                        console.error(e);
-                    }
+                    const verified = jwt.verify(token, process.env.JWT_SECRET)
+                    // IF AN EXCEPTION ISN’T THROWN THEN THAT MEANS THE USER HAS BEEN VERIFIED
+                    // WE CAN NOW LET THEM DO WHAT THEY WANT LIKE CRUD OPERATIONS BUT WE MUST
+                    // ALSO MAKE SURE THEY HAVE PERMISSION TO USE THE RESOURCES THEY WANT TO USE
                 }
+                catch (err) {
+                    return res.status(401).json({errorMessage: "Unauthorized"})
+                }
+                
+                
+                */
+                // if (!res.data || res.data.length == 0) {//incorrect email
+                //     tmpErrors += "Incorrect email or password.\n";
+                // }
+                // else{
+                //     const user = res.data[0];
+                //     userID = user.url.replace("users/", "");
+
+                //     try{
+                //         const res2 = await axios.post(`http://127.0.0.1:8000/users/comparepassword/${userID}`, {password: password});
+                //         if(!res2.data){//incorrect password
+                //             tmpErrors += "Incorrect email or password.\n";
+                //         }
+                //         else{
+                            
+                //         }
+                //     }
+                //     catch(e){
+                //         console.error(e);
+                //     }
+                // }
+
             }
             catch (e){
                 console.error(e);
             }
         }
         
-        // update the error state and abort if there are errors
         if (tmpErrors) {
             tmpErrors = (tmpErrors.slice(-1) === '\n') ? (tmpErrors.substring(0, tmpErrors.length - 1)) : tmpErrors;
             setErrors(tmpErrors);

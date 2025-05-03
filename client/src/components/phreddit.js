@@ -2,6 +2,7 @@
 //COME BACK TO ALERTS
 //length restriction on account details ??
 //notice : search for `BANANAS` for points to take note of
+//Check wrong password/email error messages
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Banner from './banner.jsx'

@@ -27,7 +27,7 @@ const Navbar = (props) => {
         <div id="navbar" className="navbar">
             <nav style={{ height: "100%", width: "100%"}}>
                 <button id="home-button" type="button" className="clickables_group2" onClick={localClickHelper1} style={{backgroundColor: (props.allData.selectedItem === "home-button") ? "#FF5700" : "#E5EBEE"}}>Home</button>
-                <hr id="home-button-hr" />
+                <hr id="home-button-hr"/>
                 <div id="communities">
                     <h1 id="community-text" className='h1-fixer'>Communities</h1>
                     <button id="create-communities-button" type="button" style={{backgroundColor: props.allData.selectedItem === "create-communities-button" ? "#FF5700" : "#E5EBEE"}} className="clickables_group2" onClick={localClickHelper2}>Create Community</button>

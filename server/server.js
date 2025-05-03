@@ -9,7 +9,6 @@ const Comment = require('./models/comments');
 const Community = require('./models/communities');
 const LinkFlair = require('./models/linkflairs');
 const Post = require('./models/posts');
-const User = require('./models/users');//   BANANAS
 
 const commentRouter = require('./routes/comments');
 const communityRouter = require('./routes/communities');
@@ -27,6 +26,7 @@ app.use('/linkFlairs', linkFlairRouter);
 app.use('/posts', postRouter);
 app.use('/users', userRouter);
 
+
 mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
 .then(() => {
     const server = app.listen(8000, () => {console.log("Server listening on port 8000...")});
@@ -36,8 +36,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
             const communities = await Community.find({});
             const linkFlairs = await LinkFlair.find({});
             const posts = await Post.find({});
-            const users = await User.find({});//    BANANAS
-            res.send({comments, communities, linkFlairs, posts, users});
+            res.send({comments, communities, linkFlairs, posts});
         }
         catch(err){
             res.status(500).send({error: "Getting data failed."});
@@ -53,7 +52,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
     })
 
 })
-
 
 const db = mongoose.connection;
 app.delete("/reset_database", async (req, res) => {
