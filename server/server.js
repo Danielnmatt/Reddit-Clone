@@ -10,6 +10,7 @@ const Community = require('./models/communities');
 const LinkFlair = require('./models/linkflairs');
 const Post = require('./models/posts');
 
+//Routes
 const commentRouter = require('./routes/comments');
 const communityRouter = require('./routes/communities');
 const linkFlairRouter = require('./routes/linkflairs');
