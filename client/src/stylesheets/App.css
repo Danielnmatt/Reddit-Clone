@@ -44,6 +44,17 @@ button{
   transition: 0.5s !important;
 }
 
+/* group4 are exclusively for the buttons that become non-functional when in 'guest' mode */
+.clickables_group4 {
+  transition: 0.3s ease-in-out;
+}
+
+.clickables_group4:hover {
+  background-color: #FF5700 /*!important (this might screw everything up)*/;
+  cursor: pointer;
+  transition: 0.5s !important;
+}
+
 .App {
   text-align: center;
 }

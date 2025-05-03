@@ -105,3 +105,6 @@ dist
 
 #vscode stuff
 .vscode
+
+#mac stuff
+.DS_Store

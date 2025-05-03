@@ -1,10 +1,14 @@
 import '../stylesheets/Banner.css'
 import '../stylesheets/App.css'
 import {useNavigate} from 'react-router-dom'
-import {useRef, useEffect} from 'react'
+import {useRef, useEffect, useState} from 'react'
 import axios from 'axios'
 
 const Banner = (props) => {
+    const isLoggedIn = props.allData.userID !== null;
+    const [isHoveringCreatePost, setIsHoveringCreatePost] = useState(false);
+    const [isHoveringProfile, setIsHoveringProfile] = useState(false);
+
     const searchRef = useRef(null);
     const navigate = useNavigate();
     
@@ -20,7 +24,7 @@ const Banner = (props) => {
     }
     
     const localClickHelper2 = () => {
-        if(props.allData.userID === null){
+        if(!isLoggedIn){
             navigate('/');
         }
         else{
@@ -31,7 +35,7 @@ const Banner = (props) => {
     }
 
     const handleProfiles = () => {
-        if(props.allData.userID !== null){
+        if(isLoggedIn){
             //do something related to profiles
             props.allUpdaters.setSelectedItem("profile-button");
         }
@@ -53,7 +57,7 @@ const Banner = (props) => {
         .then((res) => {
             console.log("Dropped database");
         })
-        .catch((e) =>{
+        .catch((e) => {
             console.error(e);
         })
     }
@@ -72,11 +76,11 @@ const Banner = (props) => {
                 </form>
             </search>
             <div id="banner-button-container">
-                <button id="new-post-button" className="clickables_group2" type="button" onClick={localClickHelper} style={{backgroundColor: props.allData.userID === null ? "#747F84" : (props.allData.selectedItem === "new-post-button" ? "#FF5700" : "#E5EBEE")}}>
+                <button id="new-post-button" className="clickables_group4" type="button" onClick={localClickHelper} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringCreatePost(true)} onMouseOut={() => setIsHoveringCreatePost(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringCreatePost || props.allData.selectedItem === "new-post-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
                     Create New Post
                 </button>
-                <button id="profile-button" className="clickables_group2" type="button" onClick={handleProfiles} disabled={props.allData.userID} style={{backgroundColor: props.allData.selectedItem === "profile-button" ? "#FF5700" : "#E5EBEE"}}>
-                    Profile
+                <button id="profile-button" className="clickables_group4" type="button" onClick={handleProfiles} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringProfile(true)} onMouseOut={() => setIsHoveringProfile(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringProfile || props.allData.selectedItem === "profile-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
+                    {isLoggedIn ? "Profile" : "Guest"}
                 </button>
             </div>
         </div>
