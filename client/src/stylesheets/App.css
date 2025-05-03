@@ -1,0 +1,100 @@
+.phreddit{
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  margin: 0;
+  word-wrap: break-word;
+  overflow-y: hidden;
+}
+
+#main {
+  display: flex;
+  margin-top: 4.79%;
+  width: 100%;
+  height: 100%;
+}
+
+button{
+  background-color: #E5EBEE;
+}
+
+.h1-fixer{
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+
+.clickables_group1 {
+  transition: 0.3s ease-in-out;
+}
+
+.clickables_group1:hover {
+  background-color: #FF5700 !important;
+  cursor: pointer;
+  transition: 0.5s !important;
+}
+
+.clickables_group2 {
+  transition: 0.3s ease-in-out;
+}
+
+.clickables_group2:hover {
+  background-color: #FF5700 !important;
+  cursor: pointer;
+  transition: 0.5s !important;
+}
+
+/* group4 are exclusively for the buttons that become non-functional when in 'guest' mode */
+.clickables_group4 {
+  transition: 0.3s ease-in-out;
+}
+
+.clickables_group4:hover {
+  background-color: #FF5700 /*!important (this might screw everything up)*/;
+  cursor: pointer;
+  transition: 0.5s !important;
+}
+
+.App {
+  text-align: center;
+}
+
+.hyperlinks:hover{
+  color: #FF5700;
+  text-decoration: underline;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

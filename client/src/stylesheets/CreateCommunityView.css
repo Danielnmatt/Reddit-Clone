@@ -1,0 +1,79 @@
+#create-community-view{
+    display: flex;
+    flex-direction: column;
+    font-family: "IBM Plex Sans", sans-serif;
+    padding-left: 2%;
+    padding-right: 2%;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+#create-community-view-title{
+    font-size: 2rem;
+    color: #FF5700;
+    border-bottom: 1px solid #747F84;
+    margin-bottom: 0%;
+    padding-bottom: .25%;
+}
+
+#create-community-input-div{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 70%;
+    margin-top: 1%;
+}
+
+.community-input-container{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2%;
+    width: fit-content;
+}
+
+.toast{
+    width: 100%;
+    margin-bottom: 1%;
+}
+
+.toastText{
+    width: fit-content;
+    border: 1px solid red;
+    border-radius: 30px;
+    padding: .25%;
+}
+
+.community-label{
+    font-size: 1.2rem;
+}
+
+#community-description{
+    height: 100px;
+    resize: none;
+}
+
+.community-input-field{
+    width: 56rem;
+    min-height: 2rem;
+    border-radius: 8px;
+    border: none;
+    font-family: "IBM Plex Sans", sans-serif;
+    outline-color: transparent;
+    background-color: #E6E9EC;
+    padding-left: .5%;
+    box-sizing: border-box;
+}
+
+#engender-community-button{
+    border-radius: 8px;
+    width: 10rem;
+    min-height: 3rem;
+    max-height: 3rem;
+    border: none;
+}
+
+#engender-community-button:hover{
+    cursor: pointer;
+    transition: 0.5s;
+    background-color: #C0C9CE;
+}

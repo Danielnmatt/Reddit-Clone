@@ -1,0 +1,96 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 90vh;
+    padding-left: 15%;
+    overflow-y: auto;
+    border-top: 1px solid;
+}
+
+#content-header {
+    display: flex;
+    border-bottom: 1px solid #747F84;
+    height: auto;
+    font-family: "IBM Plex Sans", sans-serif;
+    margin-top: 1px;
+    margin-left: 2%;
+    margin-right: 2%;
+    align-items: center;
+}
+
+#all-posts-text {
+    display: flex;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #FF5700;
+    margin-bottom: auto;
+    word-break: break-word;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+#content-buttons-div {
+    display: flex;
+    margin-left: auto;
+    justify-content: space-between;
+    align-self: center;
+    margin-top: .5%;
+    margin-right: 2%;
+}
+
+.content-buttons {
+    border-radius: 5px;
+    border-color: transparent;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    margin-right: 6%;
+}
+
+.content-buttons:hover{
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+#number-post-text{
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 2%;
+    margin-right: 2%;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+#selected-community-info{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    max-width: 100%;
+}
+
+#selected-community-description{
+    display: flex;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0%;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+#selected-community-age{
+    font-size: 1rem;
+    margin: 0%;
+    font-weight: normal;
+}
+
+#selected-community-member-count{
+    font-size: 1rem;
+    margin: 0%;
+    margin-bottom: 2%;
+    font-weight: normal;
+}
+
+.red-stars{
+    color: red;
+}

@@ -1,0 +1,73 @@
+.navbar {
+    display: flex;
+    border-right: 1px solid;
+    flex-direction: column;
+    height: calc(100% - 8vh);
+    width: 15%;
+    position: fixed;
+    background-color: white;
+    border-top: 1px solid;
+    overflow-y: auto;
+}
+
+#home-button {
+    border-radius: 5px;
+    border-color: transparent;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1.5rem;
+    display: flex;
+    width: 90%;
+    height: 4%;
+    margin: 5%;
+    align-items: center;
+}
+
+#home-button-hr {
+    width: 90%;
+    margin: 5%;
+}
+
+#create-communities-button {
+    border-radius: 10px;
+    border-color: transparent;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1rem;
+    display: flex;
+    width: 100%;
+    margin: 5%;
+    align-self: center;
+    justify-content: center;
+}
+
+#create-communities-button:hover {
+    background-color: #FF5700;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+#communities {
+    display: flex;
+    flex-direction: column;
+    margin: 5%;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+#community-text{
+    display: flex;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+#community-list{
+    margin: 4%;
+    list-style-type: none;
+    padding-left: 2%;
+}
+
+.community-list-item {
+    margin-bottom: 5%;
+    border-radius: 10px;
+    max-width: 100%;
+    padding-left: 2%;
+}
