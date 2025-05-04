@@ -8,11 +8,14 @@ import axios from 'axios';
 import Banner from './banner.jsx'
 import Main from './main.jsx'
 import {sortBy} from '../functions.js';
+import {useContext} from 'react';
+import {UserContext} from '../userContext.jsx'
 
 export default function Phreddit(props) {
+    const {user} = useContext(UserContext);
     useEffect(() => {
         axios.get("http://127.0.0.1:8000/")
-        .then((res) => {
+        .then(async (res) => {
             setCommunities(res.data.communities);
             setLinkFlairs(res.data.linkFlairs);
             setPosts(sortBy('newest', res.data.posts));
@@ -22,9 +25,6 @@ export default function Phreddit(props) {
             console.error(e);
         });
     }, []);
-
-    console.log("LOOK HERE1!!!!");
-    console.log(props.userHandlers.userID);
 
     const [communities, setCommunities] = useState([]);
     const [linkFlairs, setLinkFlairs] = useState([]);
@@ -41,7 +41,7 @@ export default function Phreddit(props) {
     const [showCreateCommunity, setShowCreateCommunity] = useState(false);
     const [showCreatePost, setShowCreatePost] = useState(false);
     const [showCreateComment, setShowCreateComment] = useState(false);
-
+    
     let allVisibilityOff = () => {
         setShowHomePage(false);
         setShowSelectedPost(false);
@@ -91,8 +91,8 @@ export default function Phreddit(props) {
         setComments(comments);
     }
 
-    const allData = {communities, linkFlairs, posts, comments, selectedItem, selectedSortButton, searchTerms, userID: props.userHandlers.userID};
-    const allUpdaters = {updateCommunities, updateLinkFlairs, updatePosts, updateComments, setSelectedSortButton, setSelectedItem, setSearchTerms, setUserID: props.userHandlers.setUserID};
+    const allData = {communities, linkFlairs, posts, comments, selectedItem, selectedSortButton, searchTerms, user: user};
+    const allUpdaters = {updateCommunities, updateLinkFlairs, updatePosts, updateComments, setSelectedSortButton, setSelectedItem, setSearchTerms /*setUser: props.user.setUser*/};
     const allOpeners = {openHomePage, openSelectedPost, openCreateCommunity, openCreatePost, openCreateComment};
     const allPageViews = {showHomePage, showSelectedPost, showCreateCommunity, showCreatePost, showCreateComment};
 

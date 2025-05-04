@@ -24,8 +24,22 @@ router.get('/displayName/:displayName', usersController.getUserByDisplayName);
 //Get User by email
 router.get('/email/:email', usersController.getUserByEmail);
 
+//guest user
+router.post('/guest', usersController.guestUser)
+
 //Login
 router.post('/login', usersController.loginUser);
+
+
+
+//GOOFY
+router.get('/profile/profile', usersController.getProfile)
+
+
+
+
+
+
 
 //OLD LOGIN STUFF
 //Attempt to log-in user

@@ -41,7 +41,7 @@ const getUserByID = async (req, res) =>{
         res.send(user);
     }
     catch(e){
-        res.status(500).send({error: "Getting User failed."});
+        res.status(500).send({error: "Getting User failed. GETUSERBYID"});
     }
 }
 
@@ -75,17 +75,18 @@ const deleteUser = async (req, res) =>{
 
 
 //*After CRUD operations*
+
 //Get User by displayName
 const getUserByDisplayName = async (req, res) =>{
     try{
-        const user = await User.find({displayName: req.params.displayName});
+        const user = await User.find({"displayName" : { $regex : new RegExp(req.params.displayName, "i")}});
         if(!user){
             return res.status(404).send({error: "User not found (not matching displayName)."});
         }
         res.send(user);
     }
     catch(e){
-        res.status(500).send({error: "Getting User failed."});
+        res.status(500).send({error: "Getting User failed. DISPLAYNAME"});
     }
 }
 
@@ -100,73 +101,105 @@ const getUserByEmail = async (req, res) =>{
         res.send(user);
     }
     catch(e){
-        res.status(500).send({error: "Getting User failed."});
+        res.status(500).send({error: "Getting User failed. EMAIL"});
     }
 }
 
+//Login
 const loginUser = async (req, res) => {
     try{
         const email = req.body.email;
         const plaintextPassword = req.body.password;
         const user = await User.findOne({email: email});
-
         if(!user){
-            res.status(404).send({error: "Incorrect email or password"})
+            return res.status(404).send({error: "Incorrect email or password"});
         }
-
+        
         const isMatch = await bcrypt.compare(plaintextPassword, user.password);
         if(!isMatch){
-            res.status(404).send({error: "Incorrect email or password"});
+            return res.status(404).send({error: "Incorrect email or password"});
         }
         
         const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET);
-        res.cookie("token", token, {
-            httpOnly: true, secure: true, sameSite: "none"}).status(200).json({
+        return res.cookie("token", token, {
+            httpOnly: true, secure: true, sameSite: "None"}).status(200).json({
                 success: true,
                 user: {
                     displayName: user.displayName,
                     email: user.email
                 }
-            }).send();
+            })
     }
     catch(e){
-        res.status(400).send({error: "Logging in User failed."});
+        return res.status(400).send({error: "Logging in User failed."});
     }
 }
 
-//OLD LOGIN STUFF
-//Attempt to log-in user
-// router.post('/comparepassword/:userID', async (req, res) => {
-//     try{
-//         const plaintextPassword = req.body.password;
-//         const user = await User.findById(req.params.userID);
+/*
 
-//         if(!user){
-//             res.status(404).send({error: "User not found"});
-//             return;
-//         }
+const axios = require('axios');
 
-//         const isMatch = await bcrypt.compare(plaintextPassword, user.password);
+async function loginAndGetProfile() {
+try {
+    const loginResponse = await axios.post('https://example.com/login', { login data });
+    const setCookieHeader = loginResponse.headers['set-cookie'];
 
-//         if(!isMatch){
-//             res.status(404).send({error: "Wrong password"});
-//             return;
-//         }
-//         const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET);
+    // Store the cookie (e.g., in a variable or database)
+    const cookie = setCookieHeader;
 
-//         res.cookie("token", token, {
-//             httpOnly: true, secure: true, sameSite: "none"}).status(200).json({
-//                 success: true,
-//                 user: {
-//                     displayName: user.displayName,
-//                     email: user.email
-//                 }
-//             }).send();
-//     }
-//     catch(e){
-//         res.status(500).send({ error: "Logging in User failed." });
-//     }
-// })
+    // Subsequent request
+    const profileResponse = await axios.get('https://example.com/profile', {
+    headers: {
+        Cookie: cookie
+    }
+    });
+    console.log(profileResponse);
+} catch (error) {
+    console.error(error);
+}
+}
 
-const usersController = {getAllUsers, createUser, getUserByID, updateUser, deleteUser, getUserByDisplayName, getUserByEmail, loginUser};
+loginAndGetProfile();
+
+
+*/
+
+const getProfile = (req, res) => {
+    const {token} = req.cookies;
+    if(token){
+        const verdict = jwt.verify(token, process.env.JWT_SECRET);
+        res.json(verdict.userID);
+        return;
+    }
+    else{
+        res.json(null);
+        return;
+    }
+}
+
+const guestUser = async (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None"
+    });
+
+    /*
+    
+    
+    res.cookie("token", token, {
+            httpOnly: true, secure: true, sameSite: "None"}).status(200).json({
+                success: true,
+                user: {
+                    displayName: user.displayName,
+                    email: user.email
+                }
+            })
+    
+    */
+
+    return res.status(200).json({success: true, user: {displayName: "guest", email: "null"}});
+}
+
+const usersController = {getAllUsers, createUser, getUserByID, updateUser, deleteUser, getUserByDisplayName, getUserByEmail, loginUser, getProfile, guestUser};
 module.exports = usersController;

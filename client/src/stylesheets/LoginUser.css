@@ -67,8 +67,13 @@
     white-space: pre;
 }
 
-#login-button{
-    width: 33%;
+.page-buttons-div{
+    display: flex;
+    justify-content: space-between;
+}
+
+.page-buttons{
+    width: 48%;
     align-items: center;
     
     border-radius: 8px;
@@ -79,7 +84,7 @@
     border: none;
 }
 
-#login-button:hover{
+.page-buttons:hover{
     cursor: pointer;
     transition: 0.5s;
     background-color: #C0C9CE;

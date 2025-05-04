@@ -5,9 +5,10 @@ import {useRef, useEffect, useState} from 'react'
 import axios from 'axios'
 
 const Banner = (props) => {
-    const isLoggedIn = props.allData.userID !== null;
+    const isLoggedIn = props.allData.user && props.allData.user.email !== "null";
     const [isHoveringCreatePost, setIsHoveringCreatePost] = useState(false);
     const [isHoveringProfile, setIsHoveringProfile] = useState(false);
+    const [isHoveringLogout, setIsHoveringLogout] = useState(false);
 
     const searchRef = useRef(null);
     const navigate = useNavigate();
@@ -18,12 +19,12 @@ const Banner = (props) => {
         }
     }, [props.allData.selectedItem]);
 
-    const localClickHelper = () => {
+    const handleCreatePost = () => {
         props.allOpeners.openCreatePost();
         props.allUpdaters.setSelectedItem("new-post-button");
     }
     
-    const localClickHelper2 = () => {
+    const handlePhredditLogo = () => {
         if(!isLoggedIn){
             navigate('/');
         }
@@ -38,6 +39,13 @@ const Banner = (props) => {
         if(isLoggedIn){
             //do something related to profiles
             props.allUpdaters.setSelectedItem("profile-button");
+        }
+    }
+
+    const handleLogout = () => {
+        if(isLoggedIn){
+            props.allUpdaters.setUser(null);
+            navigate('/');
         }
     }
     
@@ -66,9 +74,10 @@ const Banner = (props) => {
         <div id="banner" className="banner">
             <div id="top-left">
                 <button id="reddit-logo-clickable-button">
+                    {/*BANANAS : CHANGE TO HANDLE PHREDDIT THING*/}
                     <img id="reddit-logo" src={require("../images/Reddit_logo2.png")} alt="phreddit logo" onClick={deleteDatabase}/>
                 </button>
-                <h1 id="title" className='h1-fixer' onClick={localClickHelper2}>phreddit</h1>
+                <h1 id="title" className='h1-fixer' onClick={handlePhredditLogo}>phreddit</h1>
             </div>
             <search className="search-bar">
                 <form id="search-form" onSubmit={(e) => e.preventDefault()}>
@@ -76,11 +85,14 @@ const Banner = (props) => {
                 </form>
             </search>
             <div id="banner-button-container">
-                <button id="new-post-button" className="clickables_group4" type="button" onClick={localClickHelper} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringCreatePost(true)} onMouseOut={() => setIsHoveringCreatePost(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringCreatePost || props.allData.selectedItem === "new-post-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
+                <button id="new-post-button" className="clickables_group4" type="button" onClick={handleCreatePost} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringCreatePost(true)} onMouseOut={() => setIsHoveringCreatePost(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringCreatePost || props.allData.selectedItem === "new-post-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
                     Create New Post
                 </button>
-                <button id="profile-button" className="clickables_group4" type="button" onClick={handleProfiles} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringProfile(true)} onMouseOut={() => setIsHoveringProfile(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringProfile || props.allData.selectedItem === "profile-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
+                <button id="profile-button" className="clickables_group4" type="button" onClick={handleProfiles} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringProfile(true)} onMouseOut={() => setIsHoveringProfile(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringProfile || props.allData.selectedItem === "profile-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
                     {isLoggedIn ? "Profile" : "Guest"}
+                </button>
+                <button id="logout-button" className="clickables_group4" type="button" onClick={handleLogout} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringLogout(true)} onMouseOut={() => setIsHoveringLogout(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringLogout || props.allData.selectedItem === "logout-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
+                    Logout
                 </button>
             </div>
         </div>

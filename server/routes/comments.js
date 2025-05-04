@@ -11,7 +11,6 @@ router.post('/', commentsController.createComment);
 //Get Comment by ID
 router.get('/:commentID', commentsController.getCommentByID);
 
-
 //Update a Comment
 router.put('/:commentID', commentsController.updateComment);
 

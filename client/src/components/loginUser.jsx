@@ -8,10 +8,8 @@ const LoginUser = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState("");
-    //BANANAS
-    const [user, setUser] = useState(null);
     const navigate = useNavigate();
-
+    
     const login = async (e) => {
         e.preventDefault();
         let tmpErrors = "";
@@ -20,17 +18,14 @@ const LoginUser = (props) => {
             tmpErrors += "Email and password must be entered.\n";
         }
         else{
-            try {  
-                const res = await axios.post("http://127.0.0.1:8000/users/login", {email: email, password: password});
-                //BANANAS
-                setUser(res.data.user);
+            try {
+                await axios.post("http://127.0.0.1:8000/users/login", {email: email, password: password}, {withCredentials: true});
             }
             catch(e){
                 tmpErrors += "Incorrect email or password.\n";
-                console.error(e);
             }
         }
-        
+
         if(tmpErrors){
             tmpErrors = (tmpErrors.slice(-1) === '\n') ? (tmpErrors.substring(0, tmpErrors.length - 1)) : tmpErrors;
             setErrors(tmpErrors);
@@ -50,14 +45,17 @@ const LoginUser = (props) => {
                     <form id="login-user-form">
                         <div className="user-input-container">
                             <label htmlFor="email-input">Email&nbsp;<span className="red-stars">*</span></label>
-                            <input onChange={(e) => setEmail(e.target.value)} type="text" id="email-input" className="user-input-field" placeholder="johncena@johnny.com..." maxLength="40" required />
+                            <input onChange={(e) => setEmail(e.target.value.toLowerCase())} type="text" id="email-input" className="user-input-field" placeholder="johncena@johnny.com..." maxLength="40" required />
                         </div>
                         <div className="user-input-container">
                             <label htmlFor="password-input">Password&nbsp;<span className="red-stars">*</span></label>
-                            <input onChange={(e) => setPassword(e.target.value)} type="text" id="password-input" className="user-input-field" placeholder="ucantCme123..." maxLength="40" required />
+                            <input onChange={(e) => setPassword(e.target.value)} type="password" id="password-input" className="user-input-field" placeholder="ucantCme123..." maxLength="40" required />
                         </div>
                         <p id="error-msgs">{errors}</p>
-                        <button onClick={login} id="login-button" type="submit">Login</button>
+                        <div className="page-buttons-div">
+                            <button onClick={login} className="page-buttons" type="submit">Login</button>
+                            <button onClick={() => navigate('/')} className="page-buttons" type="cancel">Cancel</button>
+                        </div>
                     </form>
                 </div>
             </div>

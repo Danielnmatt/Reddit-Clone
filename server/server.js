@@ -3,6 +3,7 @@
 // This is where you should start writing server-side code for this application.
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 const Comment = require('./models/comments');
@@ -18,15 +19,26 @@ const postRouter = require('./routes/posts');
 const userRouter = require('./routes/users');
 
 const app = express();
-app.use(cors());
-app.use(express.json())
+app.use(
+    cors({
+        origin: 'http://localhost:3000',
+        credentials: true
+    }
+));
+app.use(express.json());
+app.use(cookieParser());
+
+// const auth = require('./controllers/authController');
+// const protectedRoute = require('./routes/protectedRoute');
+// app.use(express.json());
+// app.use('/auth', userRouter);
+// app.use('/protected', protectedRoute);
 
 app.use('/comments', commentRouter);
 app.use('/communities', communityRouter);
 app.use('/linkFlairs', linkFlairRouter);
 app.use('/posts', postRouter);
 app.use('/users', userRouter);
-
 
 mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
 .then(() => {
