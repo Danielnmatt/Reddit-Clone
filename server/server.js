@@ -11,13 +11,6 @@ const Community = require('./models/communities');
 const LinkFlair = require('./models/linkflairs');
 const Post = require('./models/posts');
 
-//Routes
-const commentRouter = require('./routes/comments');
-const communityRouter = require('./routes/communities');
-const linkFlairRouter = require('./routes/linkflairs');
-const postRouter = require('./routes/posts');
-const userRouter = require('./routes/users');
-
 const app = express();
 app.use(
     cors({
@@ -34,11 +27,12 @@ app.use(cookieParser());
 // app.use('/auth', userRouter);
 // app.use('/protected', protectedRoute);
 
-app.use('/comments', commentRouter);
-app.use('/communities', communityRouter);
-app.use('/linkFlairs', linkFlairRouter);
-app.use('/posts', postRouter);
-app.use('/users', userRouter);
+app.use('/comments', require('./routes/comments'));
+app.use('/communities', require('./routes/communities'));
+app.use('/linkFlairs', require('./routes/linkflairs'));
+app.use('/posts', require('./routes/posts'));
+app.use('/users', require('./routes/users'));
+app.use('/auth', require('./routes/auth'))
 
 mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
 .then(() => {

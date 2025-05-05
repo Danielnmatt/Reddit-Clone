@@ -13,19 +13,6 @@ import {UserContext} from '../userContext.jsx'
 
 export default function Phreddit(props) {
     const {user} = useContext(UserContext);
-    useEffect(() => {
-        axios.get("http://127.0.0.1:8000/")
-        .then(async (res) => {
-            setCommunities(res.data.communities);
-            setLinkFlairs(res.data.linkFlairs);
-            setPosts(sortBy('newest', res.data.posts));
-            setComments(res.data.comments);
-        })
-        .catch((e) => {
-            console.error(e);
-        });
-    }, []);
-
     const [communities, setCommunities] = useState([]);
     const [linkFlairs, setLinkFlairs] = useState([]);
     const [posts, setPosts] = useState([]);
@@ -42,6 +29,20 @@ export default function Phreddit(props) {
     const [showCreatePost, setShowCreatePost] = useState(false);
     const [showCreateComment, setShowCreateComment] = useState(false);
     
+    useEffect(() => {
+        console.log("User : ", user);
+        axios.get("http://127.0.0.1:8000/")
+        .then(async (res) => {
+            setCommunities(res.data.communities);
+            setLinkFlairs(res.data.linkFlairs);
+            setPosts(sortBy('newest', res.data.posts));
+            setComments(res.data.comments);
+        })
+        .catch((e) => {
+            console.error(e);
+        });
+    }, [user]);
+
     let allVisibilityOff = () => {
         setShowHomePage(false);
         setShowSelectedPost(false);
@@ -49,7 +50,7 @@ export default function Phreddit(props) {
         setShowCreatePost(false);
         setShowCreateComment(false);
     };
-    
+
     let openHomePage = () => {
         allVisibilityOff();
         setSearchTerms("");

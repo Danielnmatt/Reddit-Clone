@@ -101,7 +101,7 @@ const Content = (props) => {
                 setCommunityHeaderInfo([
                     community.name, 
                     hyperLink(community.description, false), 
-                    "Created " + timestamp(community.startDate), 
+                    "Created " + timestamp(community.startDate) + " by " + community.members[0], 
                     community.memberCount + ((community.memberCount > 1) ? " members" : " member")
                 ]);
 
@@ -116,7 +116,7 @@ const Content = (props) => {
                 console.error(e);
             });
         }
-    }, [props.allData.selectedItem, filteredPostArray, filteredCommentsArray]);
+    }, [props.allData.selectedItem, filteredPostArray, filteredCommentsArray, props.allData.communities]);
     
     return (
         <div className="content">

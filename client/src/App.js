@@ -52,9 +52,7 @@ import Welcome from './components/welcome.jsx'
 import RegisterUser from './components/registerUser.jsx';
 import LoginUser from './components/loginUser.jsx';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import {useState, useEffect} from 'react'
 import {UserContextProvider} from './userContext.jsx'
-
 
 function App() {
   if(!navigator.onLine){
@@ -66,10 +64,10 @@ function App() {
       <BrowserRouter>
         <section className="phreddit">
           <Routes>
-            <Route path='/' element={<Welcome />}/>
-            <Route path='/phreddit' element={<Phreddit />}/>
+            <Route path='/' element={<Welcome/>}/>
+            <Route path='/phreddit' element={<Phreddit/>}/>
             <Route path='/register' element={<RegisterUser/>}/>
-            <Route path='/login' element={<LoginUser />}/>
+            <Route path='/login' element={<LoginUser/>}/>
           </Routes>
         </section>
       </BrowserRouter>

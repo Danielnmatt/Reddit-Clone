@@ -78,14 +78,12 @@ const RegisterUser = (props) => {
             };
             
             try {
-                const res = await axios.post("http://127.0.0.1:8000/users/", newUser);
-                //props.userHandlers.setUserID(res.data.url.replace('users/', "")); //think this shouldn't be here    BANANAS
+                axios.post("http://127.0.0.1:8000/auth/register", newUser, {withCredentials: true});
                 navigate('/');
             }
             catch (e) {
                 console.error(e);
             }
-
         }
         
     };

@@ -4,14 +4,30 @@ import '../stylesheets/Welcome.css'
 import axios from 'axios'
 import {useContext} from 'react';
 import {UserContext} from '../userContext'
+import {useNavigate} from 'react-router-dom'
 const Welcome = (props) => {
+    const navigate = useNavigate();
     const {setUser} = useContext(UserContext);
     const handleGuest = async () => {
         try{
-            await axios.post("http://127.0.0.1:8000/users/guest", {}, {withCredentials: true}).then((res) => setUser(res.data.user)).catch((e) => {console.error(e)});
+            await axios.get("http://127.0.0.1:8000/auth/logout", {withCredentials: true})
+            await axios.get("http://127.0.0.1:8000/auth/guest", {withCredentials: true})
+            .then((res) => setUser(res.data.user))
+            .catch((e) => console.error(e));
         }
         catch(e){
             console.error(e);
+        }
+    }
+    const handleAlreadyLoggedIn = async () => {
+        const profile = await axios.get("http://127.0.0.1:8000/auth/profile", {withCredentials: true})
+        if(profile.data){
+            const user= await axios.get(`http://127.0.0.1:8000/users/${profile.data}`);
+            setUser({
+                displayName: user.data[0].displayName,
+                email: user.data[0].email
+            });
+            navigate('/phreddit')
         }
     }
 
@@ -23,7 +39,7 @@ const Welcome = (props) => {
                     <Link to="/register" className="welcome-link clickables_group3">
                         <h2 className="welcome-options">Register as a new user</h2>
                     </Link>
-                    <Link to="/login" className="welcome-link clickables_group3">
+                    <Link to="/login" className="welcome-link clickables_group3" onClick={handleAlreadyLoggedIn}>
                         <h2 className="welcome-options">Login</h2>
                     </Link>
                     <Link to="/phreddit" className="welcome-link clickables_group3" onClick={handleGuest}>

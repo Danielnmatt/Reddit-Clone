@@ -3,6 +3,7 @@ import '../stylesheets/App.css'
 
 //App.js->phreddit.js->main.jsx->navbar.jsx
 const Navbar = (props) => {
+    const isLoggedIn = props.allData?.user?.displayName !== "guest";
     const handleHomeButton = () => {
         props.allUpdaters.setSearchTerms("");
         props.allUpdaters.updatePosts(props.allData.posts);
@@ -23,10 +24,15 @@ const Navbar = (props) => {
         props.allUpdaters.setSelectedItem(commURL);
     }
 
-    const communitiesArray = [];
-    props.allData.communities.forEach((community) => {
-        
-    })
+    const userCommunities = props.allData.communities.filter((community) =>
+        community.members.includes(props.allData?.user?.displayName)
+    );
+
+    const otherCommunities = props.allData.communities.filter((community) =>
+        !community.members.includes(props.allData?.user?.displayName)
+    );
+
+    const sortedCommunities = userCommunities.concat(otherCommunities);
     
     return (
         <div id="navbar" className="navbar">
@@ -35,9 +41,9 @@ const Navbar = (props) => {
                 <hr id="home-button-hr"/>
                 <div id="communities">
                     <h1 id="community-text" className='h1-fixer'>Communities</h1>
-                    <button id="create-communities-button" type="button" style={{backgroundColor: props.allData.selectedItem === "create-communities-button" ? "#FF5700" : "#E5EBEE"}} className="clickables_group2" onClick={handleCreateCommunities}>Create Community</button>
+                    <button id="create-communities-button" type="button" disabled={!isLoggedIn}style={{backgroundColor: props.allData.selectedItem === "create-communities-button" ? "#FF5700" : "#E5EBEE"}} className="clickables_group2" onClick={handleCreateCommunities}>Create Community</button>
                     <ul id="community-list">
-                        {props.allData.communities.map((community) => (
+                        {sortedCommunities.map((community) => (
                             <li
                                 className="community-list-item clickables_group2"
                                 key={community.url}

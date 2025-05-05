@@ -1,14 +1,16 @@
 import {useNavigate} from 'react-router-dom'
 import '../stylesheets/App.css'
 import '../stylesheets/LoginUser.css'
-import {useState} from 'react'
+import {useState, useContext} from 'react'
 import axios from 'axios'
+import {UserContext} from '../userContext'
 
 const LoginUser = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState("");
     const navigate = useNavigate();
+    const {setUser} = useContext(UserContext);
     
     const login = async (e) => {
         e.preventDefault();
@@ -19,7 +21,10 @@ const LoginUser = (props) => {
         }
         else{
             try {
-                await axios.post("http://127.0.0.1:8000/users/login", {email: email, password: password}, {withCredentials: true});
+                await axios.post("http://127.0.0.1:8000/auth/login", {email: email, password: password}, {withCredentials: true})
+                .then((res) => {
+                    setUser(res.data.user);
+                })
             }
             catch(e){
                 tmpErrors += "Incorrect email or password.\n";

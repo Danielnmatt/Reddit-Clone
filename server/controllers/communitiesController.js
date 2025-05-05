@@ -40,8 +40,7 @@ const getCommunityByID = async (req, res) =>{
 //Update a community
 const updateCommunity = async (req, res) =>{
     try {
-        console.log(req.body);
-        const updatedCommunity = await Community.findByIdAndUpdate(req.params.communityID, req.body, {new: true});
+        const updatedCommunity = await Community.findByIdAndUpdate(req.params.communityID, req.body.updatedCommunity, {new: true});
         if(!updatedCommunity){
             return res.status(404).send({error: "Community not found."});
         }

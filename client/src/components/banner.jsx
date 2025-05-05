@@ -5,7 +5,7 @@ import {useRef, useEffect, useState} from 'react'
 import axios from 'axios'
 
 const Banner = (props) => {
-    const isLoggedIn = props.allData.user && props.allData.user.email !== "null";
+    const isLoggedIn = props.allData?.user?.displayName !== "guest";
     const [isHoveringCreatePost, setIsHoveringCreatePost] = useState(false);
     const [isHoveringProfile, setIsHoveringProfile] = useState(false);
     const [isHoveringLogout, setIsHoveringLogout] = useState(false);
@@ -38,15 +38,16 @@ const Banner = (props) => {
     const handleProfiles = () => {
         if(isLoggedIn){
             //do something related to profiles
+            console.log("Profile button clicked: ", props.allData.user)
+            alert(props.allData.user.displayName)
             props.allUpdaters.setSelectedItem("profile-button");
         }
     }
 
     const handleLogout = () => {
-        if(isLoggedIn){
-            props.allUpdaters.setUser(null);
-            navigate('/');
-        }
+        props.allUpdaters.setSelectedItem("logout-button");
+        axios.get('http://127.0.0.1:8000/auth/logout', {withCredentials: true})
+        navigate('/');
     }
     
     const acceptSearchQuery = (e) => {
@@ -89,9 +90,9 @@ const Banner = (props) => {
                     Create New Post
                 </button>
                 <button id="profile-button" className="clickables_group4" type="button" onClick={handleProfiles} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringProfile(true)} onMouseOut={() => setIsHoveringProfile(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringProfile || props.allData.selectedItem === "profile-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
-                    {isLoggedIn ? "Profile" : "Guest"}
+                    {isLoggedIn ? props.allData?.user?.displayName : "Guest"}
                 </button>
-                <button id="logout-button" className="clickables_group4" type="button" onClick={handleLogout} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringLogout(true)} onMouseOut={() => setIsHoveringLogout(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringLogout || props.allData.selectedItem === "logout-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
+                <button id="logout-button" className="clickables_group4" type="button" onClick={handleLogout} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringLogout(true)} onMouseOut={() => setIsHoveringLogout(false)} style={{display: isLoggedIn ? "inline-block" : "none", backgroundColor: isLoggedIn ? ((isHoveringLogout || props.allData.selectedItem === "logout-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
                     Logout
                 </button>
             </div>
