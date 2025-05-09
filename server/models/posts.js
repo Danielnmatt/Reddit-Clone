@@ -32,6 +32,11 @@ const postSchema = new Schema({
         type: Number,
         required: true,
         default: 0
+    },
+    votes: {
+        type: Number,
+        required: true,
+        default: 0
     }
 })
 

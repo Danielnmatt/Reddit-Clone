@@ -3,6 +3,7 @@ import '../stylesheets/App.css'
 import '../stylesheets/RegisterUser.css'
 import {useState} from 'react'
 import axios from 'axios'
+axios.defaults.withCredentials = true;
 
 const RegisterUser = (props) => {
     const [firstName, setFirstName] = useState("");

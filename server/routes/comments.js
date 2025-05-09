@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
+const authController = require('../controllers/authController');
 
 //Get all Comments
 router.get('/', commentsController.getAllComments);
@@ -12,7 +13,7 @@ router.post('/', commentsController.createComment);
 router.get('/:commentID', commentsController.getCommentByID);
 
 //Update a Comment
-router.put('/:commentID', commentsController.updateComment);
+router.put('/:commentID', authController.authenticateUser, commentsController.updateComment);
 
 //Delete a Comment
 router.delete('/:commentID', commentsController.deleteComment);

@@ -9,6 +9,7 @@ import CreateCommentView from '../content/createCommentView'
 import {useState, useEffect} from 'react'
 import {timestamp, hyperLink} from '../../functions.js'
 import axios from 'axios'
+axios.defaults.withCredentials = true;
 
 const Content = (props) => {
     const [postsToShow, setPostsToShow] = useState([]);
@@ -147,6 +148,8 @@ const Content = (props) => {
                 allData={props.allData}
                 visibility={props.allPageViews.showSelectedPost}
                 post={props.selectedPost}
+                
+                postData={null}
             />
 
             {/* CreateCommunityView */}

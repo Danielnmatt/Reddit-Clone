@@ -20,6 +20,11 @@ const commentSchema = new Schema({
         required: true,
         default: Date.now
     },
+    votes: {
+        type: Number,
+        required: true,
+        default: 0
+    }
 })
 
 commentSchema.virtual('url').get(function(){

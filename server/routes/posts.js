@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postsController = require('../controllers/postsController')
+const authController = require('../controllers/authController');
 
 //Get all Posts
 router.get('/', postsController.getAllPosts);
@@ -12,7 +13,7 @@ router.post('/', postsController.createPost);
 router.get('/:postID', postsController.getPostByID);
 
 //Update a Post
-router.put('/:postID', postsController.updatePost);
+router.put('/:postID', authController.authenticateUser, postsController.updatePost);
 
 //Delete a Post
 router.delete('/:postID', postsController.createPost);

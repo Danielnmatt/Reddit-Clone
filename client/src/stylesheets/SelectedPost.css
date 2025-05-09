@@ -30,6 +30,7 @@
 #post-view-title{
     margin-top: 0%;
     margin-bottom: 0%;
+    font-size: 2em; /* newly added */
     color: #FF5700;
 }
 
@@ -43,6 +44,7 @@
 #post-view-content{
     margin-top: 1%;
     margin-bottom: 0%;
+    white-space: pre-wrap; /* newly added */
 }
 
 #post-view-engagement{
@@ -53,6 +55,7 @@
 }
 
 #post-view-add-comment{
+    transition: .3s ease-in-out;
     border: none;
     width: 10%;
     height: 2rem;
@@ -87,12 +90,12 @@
 .comment-content{
     margin-top: .5%;
     margin-bottom: 0%;
+    white-space: pre-wrap; /* newly added */
 }
 
 .reply-button{
-    margin-top: .5%;
-    margin-bottom: 0%;
-    background-color: transparent;
+    transition: .3s ease-in-out;
+    margin: .5% 2% 0% auto;
     border: none;
     border-radius: 20px;
     background-color: #e5ebee;
@@ -103,5 +106,14 @@
 .reply-button:hover {
     transition: .5s;
     background-color: #747F84;
+    cursor: pointer;
+}
+
+.vote-button{
+    transition: .3s ease-in-out;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 15px;
     cursor: pointer;
 }

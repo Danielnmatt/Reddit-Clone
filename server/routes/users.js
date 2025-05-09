@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
+const authController = require('../controllers/authController');
 
 //Get all Users
 router.get('/', usersController.getAllUsers);
@@ -9,7 +10,7 @@ router.get('/', usersController.getAllUsers);
 router.get('/:userID', usersController.getUserByID);
 
 //Update a User
-router.put('/:userID', usersController.updateUser);
+router.put('/:userID', authController.authenticateUser, usersController.updateUser);
 
 //*After CRUD operations*
 //Get User by displayName

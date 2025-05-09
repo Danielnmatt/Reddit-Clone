@@ -69,6 +69,7 @@ function createComment(commentObj) {
         commentedBy: commentObj.commentedBy,
         commentedDate: commentObj.commentedDate,
         commentIDs: commentObj.commentIDs,
+        votes: commentObj.votes,
     });
     return newCommentDoc.save();
 }
@@ -82,6 +83,7 @@ function createPost(postObj) {
         views: postObj.views,
         linkFlairID: postObj.linkFlairID,
         commentIDs: postObj.commentIDs,
+        votes: postObj.votes,
     });
     return newPostDoc.save();
 }
@@ -194,6 +196,7 @@ async function initializeDB() {
         postedDate: new Date('August 23, 2024 01:19:00'),
         commentIDs: [commentRef1, commentRef2],
         views: 14,
+        votes: 921
     };
     const post2 = { // post 2
         postID: 'p2',
@@ -204,6 +207,7 @@ async function initializeDB() {
         postedDate: new Date('September 9, 2024 14:24:00'),
         commentIDs: [commentRef4, commentRef5],
         views: 1023,
+        votes: 221
     };
     let postRef1 = await createPost(post1);
     let postRef2 = await createPost(post2);
@@ -224,7 +228,7 @@ async function initializeDB() {
         description: 'A fantastical reimagining of our past and present.',
         postIDs: [postRef2],
         startDate: new Date('May 4, 2017 08:32:00'),
-        members: ['MarcoArelius', 'astyanax', 'outtheretruth47', 'bigfeet'],
+        members: ['MarcoArelius', 'astyanax', 'outtheretruth47', 'bigfeet', 'rjc'],
         memberCount: 4,
     };
 

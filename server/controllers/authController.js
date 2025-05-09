@@ -51,7 +51,9 @@ const loginUser = async (req, res) => {
                 success: true,
                 user: {
                     displayName: user.displayName,
-                    email: user.email
+                    email: user.email,
+                    id: user._id,
+                    userVotes: user.userVotes
                 }
             })
     }
@@ -101,5 +103,23 @@ const guestUser = async (req, res) => {
     return res.status(200).json({success: true, user: {displayName: "guest", email: "null"}});
 }
 
-const authController = {registerUser, loginUser, logoutUser, getUserProfile, guestUser};
+//authenticating logged user before important action
+const authenticateUser = (req, res, next) => {
+    const {token} = req.cookies;
+
+    if(!token){
+        return res.status(401).json({ error: 'Not authenticated' })
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userID = decoded.userID;
+        next();
+    } catch (err) {
+        return res.status(403).json({ error: 'Invalid or expired token' });
+    }
+};
+
+
+const authController = {registerUser, loginUser, logoutUser, getUserProfile, guestUser, authenticateUser};
 module.exports = authController;

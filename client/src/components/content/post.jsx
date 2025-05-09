@@ -3,6 +3,7 @@ import '../../stylesheets/App.css'
 import {timestamp, hyperLink} from '../../functions.js'
 import {useEffect, useState} from 'react';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 //App.js->phreddit.js->main.jsx->content.jsx->posts.jsx->post.jsx
 const Post = (props) => {
@@ -67,7 +68,7 @@ const Post = (props) => {
                 <p className="post-text">{hyperLink(((props.postData.content.substring(0, (props.postData.content.length >= 80 ? 80 : props.postData.content.length))) + (props.postData.content.length > 80 ? '...' : '')), true)}</p>
             </div>
             <div className="post-footer-div">
-                <p className="post-footer">Views: {props.postData.views} | Comments: {props.postData.commentCount}</p>
+                <p className="post-footer">Views: {props.postData.views} | Comments: {props.postData.commentCount} | Votes: {props.postData.votes}</p>
             </div>
         </div>
     );

@@ -5,13 +5,15 @@ import axios from 'axios'
 import {useContext} from 'react';
 import {UserContext} from '../userContext'
 import {useNavigate} from 'react-router-dom'
-const Welcome = (props) => {
+axios.defaults.withCredentials = true;
+
+const Welcome = () => {
     const navigate = useNavigate();
     const {setUser} = useContext(UserContext);
     const handleGuest = async () => {
         try{
-            await axios.get("http://127.0.0.1:8000/auth/logout", {withCredentials: true})
-            await axios.get("http://127.0.0.1:8000/auth/guest", {withCredentials: true})
+            await axios.get("http://127.0.0.1:8000/auth/logout")
+            await axios.get("http://127.0.0.1:8000/auth/guest")
             .then((res) => setUser(res.data.user))
             .catch((e) => console.error(e));
         }
@@ -20,12 +22,14 @@ const Welcome = (props) => {
         }
     }
     const handleAlreadyLoggedIn = async () => {
-        const profile = await axios.get("http://127.0.0.1:8000/auth/profile", {withCredentials: true})
+        const profile = await axios.get("http://127.0.0.1:8000/auth/profile")
         if(profile.data){
-            const user= await axios.get(`http://127.0.0.1:8000/users/${profile.data}`);
+            const user = await axios.get(`http://127.0.0.1:8000/users/${profile.data}`);
             setUser({
                 displayName: user.data[0].displayName,
-                email: user.data[0].email
+                email: user.data[0].email,
+                id: user.data[0]._id,
+                userVotes: user.data[0].userVotes
             });
             navigate('/phreddit')
         }

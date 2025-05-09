@@ -34,7 +34,7 @@
     font-size: 1rem;
     display: flex;
     width: 100%;
-    margin: 5%;
+    margin: 5% 5% 10% 5%;
     align-self: center;
     justify-content: center;
 }
@@ -52,14 +52,14 @@
     font-family: "IBM Plex Sans", sans-serif;
 }
 
-#community-text{
+.community-text{
     display: flex;
     margin: 0;
     font-size: 1.25rem;
     font-weight: bold;
 }
 
-#community-list{
+.community-list{
     margin: 4%;
     list-style-type: none;
     padding-left: 2%;

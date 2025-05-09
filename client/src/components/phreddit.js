@@ -3,6 +3,8 @@
 //length restriction on account details ??
 //notice : search for `BANANAS` for points to take note of
 //Check wrong password/email error messages
+
+//BANANAS: really bad; need to handle graceful exit when the database is disconnected while the user is logged in. right now it just crashes
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Banner from './banner.jsx'
@@ -10,6 +12,7 @@ import Main from './main.jsx'
 import {sortBy} from '../functions.js';
 import {useContext} from 'react';
 import {UserContext} from '../userContext.jsx'
+axios.defaults.withCredentials = true;
 
 export default function Phreddit(props) {
     const {user} = useContext(UserContext);

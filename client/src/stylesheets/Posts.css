@@ -13,7 +13,7 @@
     cursor: pointer;
 }
 
-#posts-div {
+.posts-div {
     margin-left: 3.5%;
     margin-right: 3.5%;
     display: flex;
@@ -74,4 +74,14 @@
 
 .post-footer {
     margin-top: 0%;
+}
+
+.post-separator-headers {
+    display: flex;
+    font-size: 1.5rem;
+    color: #FF5700;
+    margin-left: 0%;
+    margin-bottom: 0%;
+    /* margin-bottom: auto; */
+    font-family: "IBM Plex Sans", sans-serif;
 }

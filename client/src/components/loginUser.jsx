@@ -4,6 +4,7 @@ import '../stylesheets/LoginUser.css'
 import {useState, useContext} from 'react'
 import axios from 'axios'
 import {UserContext} from '../userContext'
+axios.defaults.withCredentials = true;
 
 const LoginUser = (props) => {
     const [email, setEmail] = useState("");

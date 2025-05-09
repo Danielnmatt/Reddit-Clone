@@ -3,6 +3,7 @@ import '../../stylesheets/App.css'
 import {useState} from 'react'
 import {hyperLink} from '../../functions';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 //App.js->phreddit.js->main.jsx->content.jsx->createCommunityView.jsx
 const CreateCommunityView = (props) => {

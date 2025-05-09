@@ -2,6 +2,7 @@ import '../../stylesheets/Content.css'
 import '../../stylesheets/App.css'
 import {useEffect, useState} from 'react'
 import axios from 'axios'
+axios.defaults.withCredentials = true;
 
 //App.js->phreddit.js->main.jsx->content.jsx->contentHeader.jsx
 const ContentHeader = (props) => {
