@@ -57,25 +57,25 @@ const ContentHeader = (props) => {
         }
         setIsProcessingCommunityAction(0);
         if(joinOrLeave === "Join"){
-            const updatedCommunity = {members: Array.from(new Set([...community.members, props.allData.user.displayName]))};
-            axios.put(`http://127.0.0.1:8000/communities/${props.allData.selectedItem.replace('communities/', '')}`, {updatedCommunity})
+            axios.put(`http://127.0.0.1:8000/communities/${props.allData.selectedItem.replace('communities/', '')}`, {members: Array.from(new Set([...community.members, props.allData.user.displayName]))})
             .then(() => {
                 setJoinOrLeave("Leave");
                 axios.get(`http://127.0.0.1:8000/communities/`)
                 .then((res) => {
                     props.allUpdaters.updateCommunities(res.data);
+                    console.log(res.data[0].members);
                 })
             })
             .finally(() => setIsProcessingCommunityAction(prev => prev + 1))
         }
         else{
-            const updatedCommunity = {members: community.members.filter((member) => member !== props.allData.user.displayName)}
-            axios.put(`http://127.0.0.1:8000/communities/${props.allData.selectedItem.replace('communities/', '')}`, {updatedCommunity})
+            axios.put(`http://127.0.0.1:8000/communities/${props.allData.selectedItem.replace('communities/', '')}`, {members: community.members.filter(member => member !== props.allData.user.displayName)})
             .then(() => {
                 setJoinOrLeave("Join");
                 axios.get(`http://127.0.0.1:8000/communities/`)
                 .then((res) => {
                     props.allUpdaters.updateCommunities(res.data);
+                    console.log(res.data[0].members);
                 })
             })
             .finally(() => setIsProcessingCommunityAction(prev => prev + 1))
