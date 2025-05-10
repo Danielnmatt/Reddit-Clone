@@ -2,7 +2,7 @@ import '../../stylesheets/SelectedPost.css'
 import '../../stylesheets/App.css'
 import CommentItem from '../content/commentItem.jsx'
 import {timestamp, sortComments} from '../../functions.js'
-import {React, useState, useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import {hyperLink} from '../../functions.js'
 import axios from 'axios'
 axios.defaults.withCredentials = true;
