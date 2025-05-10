@@ -29,7 +29,8 @@ const Welcome = () => {
                 displayName: user.data[0].displayName,
                 email: user.data[0].email,
                 id: user.data[0]._id,
-                userVotes: user.data[0].userVotes
+                userVotes: user.data[0].userVotes,
+                reputation: user.data[0].reputation
             });
             navigate('/phreddit')
         }

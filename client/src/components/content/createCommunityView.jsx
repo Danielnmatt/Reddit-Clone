@@ -3,13 +3,14 @@ import '../../stylesheets/App.css'
 import {useState} from 'react'
 import {hyperLink} from '../../functions';
 import axios from 'axios';
+import {Navigate, useNavigate} from 'react-router-dom'
 axios.defaults.withCredentials = true;
 
 //App.js->phreddit.js->main.jsx->content.jsx->createCommunityView.jsx
 const CreateCommunityView = (props) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [username, setUsername] = useState("");
+    const navigate = useNavigate();
 
     if(props.visibility === false){
         return null;
@@ -18,7 +19,17 @@ const CreateCommunityView = (props) => {
     const resetInputs = () => {
         setName("");
         setDescription("");
-        setUsername("");
+    }
+
+    let happenedAlready = false;
+    const handlePossibleBadAuthentication = e => {
+        console.error(e);
+        if((e.status === 401 || e.status === 403) && !happenedAlready){
+            happenedAlready = true;
+            alert("Your session is expired or invalidated. You will be redirected.");
+            axios.get("http://127.0.0.1:8000/auth/logout").then(res => console.log("logout success")).catch(e => console.log("logout unsuccessful"));
+            navigate("/")
+        }
     }
 
     const engenderCommunity = async (e) => {
@@ -32,9 +43,7 @@ const CreateCommunityView = (props) => {
         if(!description){
             alertMsg += "*Description cannot be blank*\n";
         }
-        if(!username){
-            alertMsg += "*Username cannot be blank*\n";
-        }
+
         if(alertMsg !== ""){
             alert(alertMsg)
         }
@@ -62,7 +71,8 @@ const CreateCommunityView = (props) => {
                 description: `${description}`,
                 postIDs: [],
                 startDate: new Date(),
-                members: [`${username}`],
+                members: [props.allData.user.displayName],
+                creator: props.allData.user.displayName
             }
             resetInputs();
             axios.post("http://127.0.0.1:8000/communities", newCommunity)
@@ -76,9 +86,7 @@ const CreateCommunityView = (props) => {
                     console.error(e);
                 })
             })
-            .catch((e) => {
-                console.error(e);
-            })
+            .catch((e) => handlePossibleBadAuthentication(e));
             
             props.allOpeners.openHomePage();
         }
@@ -96,10 +104,6 @@ const CreateCommunityView = (props) => {
                     <div className="community-input-container" id="community-description-container">
                         <label className="community-label" htmlFor="community-description">Community Description (required, max 500 characters):&nbsp;<span className="red-stars">*</span></label>
                         <textarea onChange={(e) => setDescription(e.target.value)} className="community-input-field" type="text" id="community-description" name="community-description" maxLength="500" placeholder="Description..." required></textarea>
-                    </div>
-                    <div className="community-input-container" id="community-creator-username-container">
-                        <label className="community-label" htmlFor="creator-username">Creator Username (required):&nbsp;<span className="red-stars">*</span></label>
-                        <input onChange={(e) => setUsername(e.target.value)} className="community-input-field" type="text" id="creator-username" name="creator-username" maxLength="25" placeholder="Username..." required />
                     </div>
                     <button id="engender-community-button" type="submit" onClick={engenderCommunity}>Engender Community</button>
                 </div>

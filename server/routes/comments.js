@@ -7,7 +7,7 @@ const authController = require('../controllers/authController');
 router.get('/', commentsController.getAllComments);
 
 //Create a Comment
-router.post('/', commentsController.createComment);
+router.post('/', authController.authenticateUser, commentsController.createComment);
 
 //Get Comment by ID
 router.get('/:commentID', commentsController.getCommentByID);

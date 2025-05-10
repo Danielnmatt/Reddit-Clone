@@ -40,7 +40,7 @@ const getCommunityByID = async (req, res) =>{
 //Update a community
 const updateCommunity = async (req, res) =>{
     try {
-        const updatedCommunity = await Community.findByIdAndUpdate(req.params.communityID, req.body.updatedCommunity, {new: true});
+        const updatedCommunity = await Community.findByIdAndUpdate(req.params.communityID, req.body, {new: true});
         if(!updatedCommunity){
             return res.status(404).send({error: "Community not found."});
         }
@@ -68,7 +68,7 @@ const deleteCommunity = async (req, res) =>{
 //Get community by postID
 const getCommunityByPostID = async (req, res) => {
     try {
-        const community = await Community.find({postIDs: req.params.postID});
+        const community = await Community.find({postIDs: { $in: [req.params.postID]}});
         if (!community) {
             return res.status(404).send({error: "Community not found."});
         }

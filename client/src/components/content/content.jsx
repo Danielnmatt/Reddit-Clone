@@ -102,8 +102,8 @@ const Content = (props) => {
                 setCommunityHeaderInfo([
                     community.name, 
                     hyperLink(community.description, false), 
-                    "Created " + timestamp(community.startDate) + " by " + community.members[0], 
-                    community.memberCount + ((community.memberCount > 1) ? " members" : " member")
+                    "Created " + timestamp(community.startDate) + " by " + community.creator, 
+                    community.memberCount + ((community.memberCount > 1 || community.memberCount === 0) ? " members" : " member")
                 ]);
 
                 const communityPosts = props.allData.posts.filter(post => community.postIDs.includes(post.url.replace('posts/', '')));//COME BACK TO THIS
@@ -148,8 +148,6 @@ const Content = (props) => {
                 allData={props.allData}
                 visibility={props.allPageViews.showSelectedPost}
                 post={props.selectedPost}
-                
-                postData={null}
             />
 
             {/* CreateCommunityView */}

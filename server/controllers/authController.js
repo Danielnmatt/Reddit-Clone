@@ -53,7 +53,8 @@ const loginUser = async (req, res) => {
                     displayName: user.displayName,
                     email: user.email,
                     id: user._id,
-                    userVotes: user.userVotes
+                    userVotes: user.userVotes,
+                    reputation: user.reputation
                 }
             })
     }

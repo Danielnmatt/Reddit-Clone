@@ -85,7 +85,7 @@ const Posts = (props) => {
         return (
             <div className="posts-div">
                 <h2 className="post-separator-headers">Posts from joined communities ({postsInOrder_joinedComms.length})</h2>
-                <p style={{margin: "1% 0% 0% 0%", display: ((postsInOrder_joinedComms.length === 0) ? "flex" : "none")}}>Join some communities!</p>
+                <p style={{margin: "1% 0% 0% 0%", display: ((postsInOrder_joinedComms.length === 0) ? "flex" : "none")}}>{userCommunities.length === 0 ? "Join some communities!" : "No posts from joined communities."}</p>
                 {postsInOrder_joinedComms.map((post) => {
                     let commentCount = countComments(post, 0, postsInOrder_joinedComms_COMMENTS);
                     

@@ -32,7 +32,6 @@ const userSchema = new Schema({
     }
     //this is an array of strings which is used to remember which posts the user has voted on, so they cant vote again
     //it takes the form ["posts/aaeeebdbcbdbeeeee+", "posts/aaeedddbffcdbeee-"] to indicate that the user has voted on two posts, upvote on the first and downvote on the second. the array grows as the user votes on more posts and it can shrink it the user removes their votes
-    //nevermind this will take far too long
 })
 
 userSchema.virtual('url').get(function(){

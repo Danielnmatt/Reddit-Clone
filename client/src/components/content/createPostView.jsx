@@ -3,6 +3,7 @@ import '../../stylesheets/App.css'
 import {useEffect, useState} from 'react'
 import {hyperLink} from '../../functions';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 axios.defaults.withCredentials = true;
 
 //App.js->phreddit.js->main.jsx->content.jsx->createPostView.jsx
@@ -12,14 +13,23 @@ const CreatePostView = (props) => {
     const [linkFlair, setLinkFlair] = useState("");
     const [customLinkFlair, setCustomLinkFlair] = useState("");
     const [body, setBody] = useState("");
-    const [username, setUsername] = useState("");
-
     const [showCustomFlairField, setShowCustomFlairField] = useState(false);
-
+    const navigate = useNavigate();
     useEffect(() => setShowCustomFlairField(false), [props.allData.selectedItem]);
 
     if(props.visibility === false){
         return null;
+    }
+
+    let happenedAlready = false;
+    const handlePossibleBadAuthentication = e => {
+        console.error(e);
+        if((e.status === 401 || e.status === 403) && !happenedAlready){
+            happenedAlready = true;
+            alert("Your session is expired or invalidated. You will be redirected.");
+            axios.get("http://127.0.0.1:8000/auth/logout").then(res => console.log("logout success")).catch(e => console.log("logout unsuccessful"));
+            navigate("/")
+        }
     }
     
     const resetInputs = () => {
@@ -28,7 +38,6 @@ const CreatePostView = (props) => {
         setLinkFlair("");
         setCustomLinkFlair("");
         setBody("");
-        setUsername("");
     }
 
     const lfChangeHelper = (e) => {
@@ -42,14 +51,15 @@ const CreatePostView = (props) => {
         }
         const newLinkFlair = {content: lfContent}
         try{
-            const postRes = await axios.post("http://127.0.0.1:8000/linkFlairs", newLinkFlair);
-            const flairID = postRes.data.url.replace('linkFlairs/', '');
-            const getRes = await axios.get(`http://127.0.0.1:8000/linkFlairs/${flairID}`);
-            props.allUpdaters.updateLinkFlairs([...props.allData.linkFlairs, getRes.data[0]]);
-            return getRes.data[0];
+            const res1 = await axios.post("http://127.0.0.1:8000/linkFlairs", newLinkFlair)
+            const flairID = res1.data.url.replace('linkFlairs/', '');
+
+            const res2 = await axios.get(`http://127.0.0.1:8000/linkFlairs/${flairID}`)
+            props.allUpdaters.updateLinkFlairs([...props.allData.linkFlairs, res2.data[0]]);
+            return res2.data[0];
         }
         catch(e){
-            console.error(e);
+            handlePossibleBadAuthentication(e);
         }
     }
 
@@ -65,9 +75,6 @@ const CreatePostView = (props) => {
         }
         if(!body){
             alertMsg += "*Body cannot be blank*\n";
-        }
-        if(!username){
-            alertMsg += "*Username cannot be blank*\n";
         }
         if(alertMsg !== ""){
             alert(alertMsg)
@@ -106,10 +113,11 @@ const CreatePostView = (props) => {
                 title: title,
                 content: `${body}`,
                 linkFlairID: lfhelper,
-                postedBy: username,
+                postedBy: props.allData.user.displayName,
                 postedDate: new Date(),
                 commentIDs: [],
                 views: 0,
+                votes: 0
             }
 
             if(customLinkFlair.trim() === "" && linkFlair === "add-custom-flair"){
@@ -122,38 +130,37 @@ const CreatePostView = (props) => {
             }
             
             //Save Post to DB
-            let post = null;
-            axios.post("http://127.0.0.1:8000/posts", newPost)
-            .then((res) =>{
-                post = res.data;
+            try {
+                console.log("community is : " + community);
+                const res1 = await axios.post("http://127.0.0.1:8000/posts", newPost);
+                const post = res1.data;
+                const postID = post.url.replace('posts/', '');
 
-                axios.get(`http://127.0.0.1:8000/${community}`)
-                .then((res) => {
-                    const postCommunity = res.data[0];
-                    postCommunity.postIDs.push(post.url.replace('posts/', ''));
-                    axios.put(`http://127.0.0.1:8000/${community}`, postCommunity)
-                    
-                    axios.get(`http://127.0.0.1:8000/communities/`)
-                    .then((res) => {
-                        props.allUpdaters.updateCommunities([...res.data]);
-                        props.allUpdaters.updatePosts([...props.allData.posts, post]);
-                    })
-                    .catch((e) => {
-                        console.error(e);
-                    })
-                })
-            })
-            .catch((e) => {
-                console.error(e)
-            })
-            
-            resetInputs();
-            props.allUpdaters.setSearchTerms("");
-            props.allUpdaters.setSelectedSortButton("newest-button");
-            props.allUpdaters.setSelectedItem("home-button");
-            props.allOpeners.openHomePage();
+                const res2 = await axios.get(`http://127.0.0.1:8000/communities/${community.replace("communities/", "")}`);
+                const postCommunity = res2.data[0];
+
+                await axios.put(`http://127.0.0.1:8000/communities/${community.replace("communities/", "")}`, {postIDs: [...postCommunity.postIDs, postID]});
+
+                const res4 = await axios.get("http://127.0.0.1:8000/communities/");
+                props.allUpdaters.updateCommunities(res4.data);
+                props.allUpdaters.updatePosts([...props.allData.posts, post]);
+
+                resetInputs();
+                props.allUpdaters.setSearchTerms("");
+                props.allUpdaters.setSelectedSortButton("newest-button");
+                props.allUpdaters.setSelectedItem("home-button");
+                props.allOpeners.openHomePage();
+            }
+            catch (e) {
+                handlePossibleBadAuthentication(e);
+            }
         }
     }
+
+    let joinedComms = [];
+    let otherComms = [];
+    props.allData.communities.forEach(community => community.members.includes(props.allData.user.displayName) ? joinedComms.push(community) : otherComms.push(community));
+    const allCommunities = joinedComms.concat(otherComms);
 
     return (
         <div id="create-post-view">
@@ -163,7 +170,7 @@ const CreatePostView = (props) => {
                     <div id="select-community-container">
                         <select onChange={(e) => setCommunity(e.target.value)} name="select-community" id="select-community" defaultValue={"DEFAULT"} required >
                             <option value="DEFAULT" disabled>Select a Community (required)</option>
-                            {props.allData.communities.map((community) => {
+                            {allCommunities.map((community) => {
                                 return <option key={community.url} value={community.url.replace('community/', '')}>{community.name}</option>
                             })}
                         </select>
@@ -186,10 +193,6 @@ const CreatePostView = (props) => {
                     <div id="post-body-container">
                         <label htmlFor="post-body-input" id="post-body-text" name="post-body">Body (required):&nbsp;<span className="red-stars">*</span></label>
                         <textarea onChange={(e) => setBody(e.target.value)} className="post-input-field" type="text" id="post-body-input" name="post-body" placeholder="Content..." required></textarea>
-                    </div>
-                    <div id="post-username-container">
-                        <label htmlFor="post-username-input" id="post-username-text" name="post-username">Username (required):&nbsp;<span className="red-stars">*</span></label>
-                        <input onChange={(e) => setUsername(e.target.value)} type="text" id="post-username-input" className="post-input-field" name="post-username" maxLength="25" placeholder="Username..." required></input>
                     </div>
                     <button onClick={submitPost} id="submit-post-button" type="submit">Submit Post</button>
                 </div>
