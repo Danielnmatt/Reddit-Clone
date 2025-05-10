@@ -73,3 +73,25 @@
 #listing-title{
     font-size: 2rem;
 }
+
+.item-listing{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.edit-button{
+    transition: .3s ease-in-out;
+    margin: 0% 0% 0% 0%;
+    border: none;
+    border-radius: 10px;
+    background-color: #e5ebee;
+    display: inline;
+    padding: 10px;
+}
+
+.edit-button:hover {
+    transition: .5s;
+    background-color: #747F84;
+    cursor: pointer;
+}
