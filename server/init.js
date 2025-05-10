@@ -63,7 +63,8 @@ function createAdmin(adminObj) {
         email: adminObj.email, 
         displayName: adminObj.displayName,
         password: adminObj.password,
-        reputation: 1000
+        reputation: 1000,
+        accountCreationDate: Date.now()
     })
     return newAdminUser.save();
 }
@@ -73,7 +74,8 @@ function createUser(userObj) {
         email: userObj.email, 
         displayName: userObj.displayName,
         password: userObj.password,
-        reputation: 100
+        reputation: 100,
+        accountCreationDate: Date.now()
     })
     return newUser.save();
 }

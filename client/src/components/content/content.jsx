@@ -9,6 +9,7 @@ import CreateCommentView from '../content/createCommentView'
 import {useState, useEffect} from 'react'
 import {timestamp, hyperLink} from '../../functions.js'
 import axios from 'axios'
+import ProfileView from './profileView.jsx'
 axios.defaults.withCredentials = true;
 
 const Content = (props) => {
@@ -175,6 +176,13 @@ const Content = (props) => {
                 post={props.selectedPost}
                 comment={props.selectedComment}
                 visibility={props.allPageViews.showCreateComment} 
+            />
+
+            {/* ProfileView */}
+            <ProfileView
+                allData={props.allData}
+                allUpdaters={props.allUpdaters}
+                allOpeners={props.allOpeners}
             />
         </div>
     );

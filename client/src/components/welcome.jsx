@@ -28,9 +28,10 @@ const Welcome = () => {
             setUser({
                 displayName: user.data[0].displayName,
                 email: user.data[0].email,
-                id: user.data[0]._id,
+                id: user.data[0]._id,//why do we need this one
                 userVotes: user.data[0].userVotes,
-                reputation: user.data[0].reputation
+                reputation: user.data[0].reputation,
+                accountCreationDate: user.data[0].accountCreationDate
             });
             navigate('/phreddit')
         }

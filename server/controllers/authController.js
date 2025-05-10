@@ -54,7 +54,8 @@ const loginUser = async (req, res) => {
                     email: user.email,
                     id: user._id,
                     userVotes: user.userVotes,
-                    reputation: user.reputation
+                    reputation: user.reputation,
+                    accountCreationDate: user.accountCreationDate
                 }
             })
     }

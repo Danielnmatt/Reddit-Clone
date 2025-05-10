@@ -1,0 +1,75 @@
+#profile-header {
+    display: flex;
+    border-bottom: 1px solid #747F84;
+    height: auto;
+    font-family: "IBM Plex Sans", sans-serif;
+    margin: 0% 3% auto 3%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#top-user-info{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    max-width: 100%;
+}
+
+#user-display-name {
+    display: flex;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #FF5700;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    word-break: break-word;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+.user-info {
+    font-size: 1.2rem;
+    margin-top: 0%;
+    margin-bottom: 6%;
+}
+
+.user-other-info {
+    font-size: 1rem;
+    margin-top: 0%;
+}
+
+.gray-colored-span{
+    color: #747F84;
+}
+
+#content-buttons-div {
+    display: flex;
+    margin-left: auto;
+    justify-content: space-between;
+    align-self: center;
+    /* margin-top: .5%; */
+    margin-right: 0%;
+}
+
+.content-buttons {
+    border-radius: 5px;
+    border-color: transparent;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    margin-right: 3%;
+}
+
+.content-buttons:hover{
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+#profile-body{
+    margin: 0% 3% auto 3%;
+    height: 100%;
+}
+
+#listing-title{
+    font-size: 2rem;
+}
