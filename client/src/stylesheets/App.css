@@ -55,6 +55,17 @@ button{
   transition: 0.5s !important;
 }
 
+/* group5 exclusively for buttons controlling profile stuff */
+.clickables_group5 {
+  transition: 0.3s ease-in-out;
+}
+
+.clickables_group5:hover {
+  background-color: #FF5700 !important;
+  cursor: pointer;
+  transition: 0.5s !important;
+}
+
 .App {
   text-align: center;
 }

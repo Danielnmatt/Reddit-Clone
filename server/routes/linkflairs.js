@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const linkflairsController = require('../controllers/linkflairsController');
+const authController = require('../controllers/authController');
 
 //Get all LinkFlairs
 router.get('/', linkflairsController.getAllLinkFlairs);
 
 //Create a LinkFlair
-router.post('/', linkflairsController.createLinkFlair);
+router.post('/', authController.authenticateUser, linkflairsController.createLinkFlair);
 
 //Get LinkFlair by ID
 router.get('/:linkFlairID', linkflairsController.getLinkFlairByID);

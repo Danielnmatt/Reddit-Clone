@@ -28,6 +28,20 @@ const getUserByID = async (req, res) =>{
     }
 }
 
+//get User's reputation by displayName
+const getUserReputationByDisplayName = async (req, res) =>{
+    try{
+        const user = await User.findOne({displayName: req.params.displayName})
+        if(!user){
+            return res.status(404).send({error: "User not found."});
+        }
+        res.send(user.reputation);
+    }
+    catch(e){
+        res.status(500).send({error: "Getting User failed. GETUSERBYID"});
+    }
+}
+
 //Update a User
 const updateUser = async (req, res) =>{
     try {
@@ -36,6 +50,21 @@ const updateUser = async (req, res) =>{
             return res.status(404).send({error: "User not found."});
         }
         res.send(updatedUser);
+    }
+    catch(e){
+        res.status(500).send({error: "Updating User failed."});
+    }
+}
+
+//Update a User (by display name)
+const updateUserByDisplayName = async (req, res) =>{
+    try {
+        const updatedUser = await User.findOneAndUpdate({displayName: req.params.displayName}, req.body, {new: true})
+        if(!updatedUser){
+            return res.status(404).send({error: "User not found."});
+        }
+        res.send(updatedUser); //probably bad security practice to send the entire user back
+        //res.status(200).send("Successfully updated user");
     }
     catch(e){
         res.status(500).send({error: "Updating User failed."});
@@ -73,5 +102,5 @@ const getUserByEmail = async (req, res) =>{
     }
 }
 
-const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail};
+const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail, updateUserByDisplayName, getUserReputationByDisplayName};
 module.exports = usersController;

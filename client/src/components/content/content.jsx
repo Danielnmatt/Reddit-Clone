@@ -9,6 +9,7 @@ import CreateCommentView from '../content/createCommentView'
 import {useState, useEffect} from 'react'
 import {timestamp, hyperLink} from '../../functions.js'
 import axios from 'axios'
+import ProfileView from './profileView.jsx'
 axios.defaults.withCredentials = true;
 
 const Content = (props) => {
@@ -102,8 +103,8 @@ const Content = (props) => {
                 setCommunityHeaderInfo([
                     community.name, 
                     hyperLink(community.description, false), 
-                    "Created " + timestamp(community.startDate) + " by " + community.members[0], 
-                    community.memberCount + ((community.memberCount > 1) ? " members" : " member")
+                    "Created " + timestamp(community.startDate) + " by " + community.creator, 
+                    community.memberCount + ((community.memberCount > 1 || community.memberCount === 0) ? " members" : " member")
                 ]);
 
                 const communityPosts = props.allData.posts.filter(post => community.postIDs.includes(post.url.replace('posts/', '')));//COME BACK TO THIS
@@ -148,8 +149,6 @@ const Content = (props) => {
                 allData={props.allData}
                 visibility={props.allPageViews.showSelectedPost}
                 post={props.selectedPost}
-                
-                postData={null}
             />
 
             {/* CreateCommunityView */}
@@ -177,6 +176,13 @@ const Content = (props) => {
                 post={props.selectedPost}
                 comment={props.selectedComment}
                 visibility={props.allPageViews.showCreateComment} 
+            />
+
+            {/* ProfileView */}
+            <ProfileView
+                allData={props.allData}
+                allUpdaters={props.allUpdaters}
+                allOpeners={props.allOpeners}
             />
         </div>
     );

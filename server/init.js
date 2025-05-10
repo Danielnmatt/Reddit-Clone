@@ -30,10 +30,26 @@ if (!userArgs[0].startsWith('mongodb')) {
     return
 }
 
-//HERE
-let badUserArgs = userArgs.length != 4 || userArgs[1].indexOf("@") == -1 || userArgs[1].replaceAll("@", "").length !== userArgs[1].length - 1;//might need more conditions here
+
+//          ...     ...            0                                          1                 2       3
+//format :  node    init.js        mongodb://127.0.0.1:27017/phreddit         jc@jc.com         JC      password123"
+
+let badUserArgs = userArgs.length != 4 || userArgs[1].indexOf("@") == -1 || userArgs[1].replaceAll("@", "").length !== userArgs[1].length - 1;
 if(badUserArgs){
     console.log('ERROR: You need to properly instantiate the admin user.');
+    return
+}
+
+const alreadyUsedEmails = ["bigfeet@gmail.com", "outtheretruth47@gmail.com", "astyanax@gmail.com", "rollo@gmail.com", "shemp@gmail.com", "trucknutz69@gmail.com", "MarcoArelius@gmail.com", "catlady13@gmail.com"];
+const alreadyUsedDNs = ["bigfeet", "outtheretruth47", "astyanax", "rollo", "shemp", "trucknutz69", "MarcoArelius", "catlady13"];
+let lessBadUserArgs = alreadyUsedEmails.includes(userArgs[1]) || alreadyUsedDNs.includes(userArgs[2]);
+if(lessBadUserArgs){
+    console.log('ERROR: Email address or display name already in use.');
+    return
+}
+
+if(userArgs[3].includes(userArgs[2]) || userArgs[3].includes(userArgs[1].substring(0, userArgs[1].indexOf("@")))){
+    console.log('ERROR: Password must not include display name or email address.');
     return
 }
 
@@ -42,18 +58,26 @@ mongoose.connect(mongoDB);
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-//let users1 = await UserModel.find({email: userArgs[1]});
-//let users2 = await UserModel.find({displayName: userArgs[2]});
-//if(users1 || users2){bad shit}
-
 function createAdmin(adminObj) {
     let newAdminUser = new UserModel({
         email: adminObj.email, 
         displayName: adminObj.displayName,
         password: adminObj.password,
-        reputation: 1000
+        reputation: 1000,
+        accountCreationDate: Date.now()
     })
     return newAdminUser.save();
+}
+
+function createUser(userObj) {
+    let newUser = new UserModel({
+        email: userObj.email, 
+        displayName: userObj.displayName,
+        password: userObj.password,
+        reputation: 100,
+        accountCreationDate: Date.now()
+    })
+    return newUser.save();
 }
 
 function createLinkFlair(linkFlairObj) {
@@ -95,6 +119,7 @@ function createCommunity(communityObj) {
         postIDs: communityObj.postIDs,
         startDate: communityObj.startDate,
         members: communityObj.members,
+        creator: communityObj.creator
     });
     return newCommunityDoc.save();
 }
@@ -221,6 +246,7 @@ async function initializeDB() {
         startDate: new Date('August 10, 2014 04:18:00'),
         members: ['rollo', 'shemp', 'catlady13', 'astyanax', 'trucknutz69'],
         memberCount: 4,
+        creator: 'rollo'
     };
     const community2 = { // community object 2
         communityID: 'community2',
@@ -228,8 +254,9 @@ async function initializeDB() {
         description: 'A fantastical reimagining of our past and present.',
         postIDs: [postRef2],
         startDate: new Date('May 4, 2017 08:32:00'),
-        members: ['MarcoArelius', 'astyanax', 'outtheretruth47', 'bigfeet', 'rjc'],
+        members: ['MarcoArelius', 'astyanax', 'outtheretruth47', 'bigfeet'],
         memberCount: 4,
+        creator: 'MarcoArelius'
     };
 
     let communityRef1 = await createCommunity(community1);
@@ -245,7 +272,57 @@ async function initializeDB() {
         password: passwordHash
     }
 
+    //making entries for all the preexisting users
+    const user1 = {
+        email: "bigfeet@gmail.com",
+        displayName: "bigfeet",
+        password: await bcrypt.hash("password123", salt)
+    }
+    const user2 = {
+        email: "outtheretruth47@gmail.com",
+        displayName: "outtheretruth47",
+        password: await bcrypt.hash("password123", salt)
+    }
+    const user3 = {
+        email: "astyanax@gmail.com",
+        displayName: "astyanax",
+        password: await bcrypt.hash("password123", salt)
+    }
+    const user4 = {
+        email: "rollo@gmail.com",
+        displayName: "rollo",
+        password: await bcrypt.hash("password123", salt)
+    }
+    const user5 = {
+        email: "shemp@gmail.com",
+        displayName: "shemp",
+        password: await bcrypt.hash("password123", salt)
+    }
+    const user6 = {
+        email: "trucknutz69@gmail.com",
+        displayName: "trucknutz69",
+        password: await bcrypt.hash("password123", salt)
+    }
+    const user7 = {
+        email: "MarcoArelius@gmail.com",
+        displayName: "MarcoArelius",
+        password: await bcrypt.hash("password123", salt)
+    }
+    const user8 = {
+        email: "catlady13@gmail.com",
+        displayName: "catlady13",
+        password: await bcrypt.hash("password123", salt)
+    }
+    
     let adminUserRef = await createAdmin(adminUser);
+    let user1Ref = await createUser(user1);
+    let user2Ref = await createUser(user2);
+    let user3Ref = await createUser(user3);
+    let user4Ref = await createUser(user4);
+    let user5Ref = await createUser(user5);
+    let user6Ref = await createUser(user6);
+    let user7Ref = await createUser(user7);
+    let user8Ref = await createUser(user8);
     
     if (db) {
         db.close();

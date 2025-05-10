@@ -3,30 +3,38 @@ import '../../stylesheets/App.css'
 import {useState} from 'react'
 import {hyperLink} from '../../functions';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 axios.defaults.withCredentials = true;
 
 //App.js->phreddit.js->main.jsx->content.jsx->createCommentView.jsx
 const CreateCommentView = (props) => {
     const [body, setBody] = useState("");
-    const [username, setUsername] = useState("");
+    const navigate = useNavigate();
     if(props.visibility === false){
         return null;
     }
 
     const resetInputs = () => {
         setBody("");
-        setUsername("");
+    }
+    
+    let happenedAlready = false;
+    const handlePossibleBadAuthentication = e => {
+        console.error(e);
+        if((e.status === 401 || e.status === 403) && !happenedAlready){
+            happenedAlready = true;
+            alert("Your session is expired or invalidated. You will be redirected.");
+            axios.get("http://127.0.0.1:8000/auth/logout").then(res => console.log("logout success")).catch(e => console.log("logout unsuccessful"));
+            navigate("/")
+        }
     }
 
-    const submitComment = (e) => {
+    const submitComment = async (e) => {
         e.preventDefault();
         let alertMsg = "";
 
         if(!body){
             alertMsg += "*Body cannot be blank*\n";
-        }
-        if(!username){
-            alertMsg += "*Username cannot be blank*\n";
         }
         if(alertMsg !== ""){
             alert(alertMsg)
@@ -53,61 +61,39 @@ const CreateCommentView = (props) => {
             {
                 content: `${body}`,
                 commentIDs: [],
-                commentedBy: `${username}`,
+                commentedBy: props.allData.user.displayName,
                 commentedDate: new Date(),
             }
 
-            axios.post(`http://127.0.0.1:8000/comments`, newComment)
-            .then((res) => {
-                let newCommentObject = res.data;
-                if(!props.comment){ 
-                    axios.put(`http://127.0.0.1:8000/posts/${props.post.postID}`, {commentIDs: [...props.post.commentIDs, newCommentObject.url.replace("comments/", "")]})
-                    .then((res) => {
-                        let updatedPostObject = res.data;
-                        resetInputs();
-                        //Get all posts and update state
-                        axios.get(`http://127.0.0.1:8000/posts/`)
-                        .then((res) => {
-                            props.allUpdaters.updatePosts(res.data);
-                            // Update comments state
-                            axios.get(`http://127.0.0.1:8000/comments`)
-                            .then((res) => {
-                                props.allUpdaters.updateComments(res.data);
-                                props.allOpeners.openSelectedPost({...props.post, commentIDs : updatedPostObject.commentIDs, commentCount: props.post.commentCount + 1});
-                            })
-                            .catch((e) => {
-                                console.error(e)
-                            })
-                        })
-                        .catch((e) => {
-                            console.error(e)
-                        })
-                    })
-                    .catch((e) => {
-                        console.error(e)
-                    })
+            try{
+                const res1 = await axios.post(`http://127.0.0.1:8000/comments`, newComment);
+                let newCommentObject = res1.data;
+
+                if(props.comment){
+                    await axios.put(`http://127.0.0.1:8000/comments/${props.comment.url.replace('comments/', '')}`, {commentIDs: [...props.comment.commentIDs, newCommentObject.url.replace("comments/", "")]})
+                    resetInputs();
+                    
+                    const res2 = await axios.get(`http://127.0.0.1:8000/comments`)
+                    props.allUpdaters.updateComments(res2.data);
+                    props.allOpeners.openSelectedPost({...props.post, commentCount: props.post.commentCount + 1});
                 }
+
                 else{
-                    axios.put(`http://127.0.0.1:8000/comments/${props.comment.url.replace('comments/', '')}`, {commentIDs: [...props.comment.commentIDs, newCommentObject.url.replace("comments/", "")]})
-                    .then((res) => {
-                        resetInputs();
-                        axios.get(`http://127.0.0.1:8000/comments`)
-                            .then((res) => {
-                                props.allUpdaters.updateComments(res.data);
-                                props.allOpeners.openSelectedPost({...props.post, commentCount: props.post.commentCount + 1});
-                            })
-                            .catch((e) => {
-                                console.error(e)
-                            })
-                    })
-                    .catch((e) => {
-                        console.error(e)
-                    })
+                    const res2 = await axios.put(`http://127.0.0.1:8000/posts/${props.post.postID}`, {commentIDs: [...props.post.commentIDs, newCommentObject.url.replace("comments/", "")]});
+                    let updatedPostObject = res2.data;
+                    resetInputs();
+                    
+                    const res3 = await axios.get(`http://127.0.0.1:8000/posts/`);
+                    props.allUpdaters.updatePosts(res3.data);
+                    
+                    const res4 = await axios.get(`http://127.0.0.1:8000/comments`);
+                    props.allUpdaters.updateComments(res4.data);
+                    props.allOpeners.openSelectedPost({...props.post, commentIDs : updatedPostObject.commentIDs, commentCount: props.post.commentCount + 1});
                 }
-            })
-            .catch((e) => {
-                console.error(e)
-            })
+            }
+            catch(e){
+                handlePossibleBadAuthentication(e);
+            }
         }
     }
     
@@ -119,10 +105,6 @@ const CreateCommentView = (props) => {
                 <div className="create-comment-input-container" id="create-comment-content-container">
                     <label className="comment-label" htmlFor="create-comment-content">Body(required, max 500 characters):&nbsp;<span className="red-stars">*</span></label>
                     <textarea onChange={(e) => {setBody(e.target.value)}} className="create-comment-input-field" type="text" id="create-comment-content" name="create-comment-content" maxLength="500" placeholder="Content..." required></textarea>
-                </div>
-                <div className="create-comment-input-container" id="create-comment-username-container">
-                    <label className="comment-label" htmlFor="creator-username">Creator Username (required):&nbsp;<span className="red-stars">*</span></label>
-                    <input onChange={(e) => {setUsername(e.target.value)}} className="create-comment-input-field" type="text" id="create-comment-username" name="creator-username" maxLength="25" placeholder="Username..." required></input>
                 </div>
                 <button id="submit-comment-button" type="submit" onClick={submitComment}>Submit Comment</button>
             </div>

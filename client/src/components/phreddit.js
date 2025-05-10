@@ -32,6 +32,7 @@ export default function Phreddit(props) {
     const [showCreateCommunity, setShowCreateCommunity] = useState(false);
     const [showCreatePost, setShowCreatePost] = useState(false);
     const [showCreateComment, setShowCreateComment] = useState(false);
+    const [showProfileView, setShowProfieView] = useState(false);
     
     useEffect(() => {
         console.log("User : ", user);
@@ -83,6 +84,11 @@ export default function Phreddit(props) {
         setShowCreateComment(true);
     };
 
+    let openProfileView = () => {
+        allVisibilityOff();
+        setShowProfieView(true);
+    }
+
     const updateCommunities = (communities) => {
         setCommunities(communities);
     }
@@ -98,8 +104,8 @@ export default function Phreddit(props) {
 
     const allData = {communities, linkFlairs, posts, comments, selectedItem, selectedSortButton, searchTerms, user: user};
     const allUpdaters = {updateCommunities, updateLinkFlairs, updatePosts, updateComments, setSelectedSortButton, setSelectedItem, setSearchTerms /*setUser: props.user.setUser*/};
-    const allOpeners = {openHomePage, openSelectedPost, openCreateCommunity, openCreatePost, openCreateComment};
-    const allPageViews = {showHomePage, showSelectedPost, showCreateCommunity, showCreatePost, showCreateComment};
+    const allOpeners = {openHomePage, openSelectedPost, openCreateCommunity, openCreatePost, openCreateComment, openProfileView};
+    const allPageViews = {showHomePage, showSelectedPost, showCreateCommunity, showCreatePost, showCreateComment, showProfileView};
 
     return (
         <div>

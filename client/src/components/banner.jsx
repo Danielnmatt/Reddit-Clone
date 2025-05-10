@@ -38,9 +38,7 @@ const Banner = (props) => {
 
     const handleProfiles = () => {
         if(isLoggedIn){
-            //do something related to profiles
-            console.log("Profile button clicked: ", props.allData.user)
-            alert(props.allData.user.displayName)
+            props.allOpeners.openProfileView();
             props.allUpdaters.setSelectedItem("profile-button");
         }
     }

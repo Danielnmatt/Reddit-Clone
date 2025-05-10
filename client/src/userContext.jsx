@@ -18,7 +18,9 @@ export function UserContextProvider({children}){
                             displayName: res.data[0].displayName,
                             email: res.data[0].email,
                             id: res.data[0]._id,
-                            userVotes: res.data[0].userVotes
+                            userVotes: res.data[0].userVotes,
+                            reputation: res.data[0].reputation,
+                            accountCreationDate: res.data[0].accountCreationDate
                         }
                         setUser(user);
                     })

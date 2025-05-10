@@ -24,6 +24,10 @@ const communitySchema = new Schema({
         type: String,
         required: true
     }],
+    creator: {
+        type: String,
+        required: true
+    }
 })
 
 communitySchema.virtual('url').get(function(){
