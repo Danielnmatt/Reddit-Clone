@@ -12,6 +12,9 @@ router.get('/:userID', usersController.getUserByID);
 //get user's reputation ONLY by display name
 router.get('/reputation/displayName/:displayName', usersController.getUserReputationByDisplayName);//add proctective middleware here or no?
 
+//get user's votes ONLY by display name
+router.get('/votes/displayName/:displayName', authController.authenticateUser, usersController.getUserVotesByDisplayName);
+
 //Update a User
 router.put('/:userID', authController.authenticateUser, usersController.updateUser);
 

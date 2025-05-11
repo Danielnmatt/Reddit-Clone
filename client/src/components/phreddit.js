@@ -4,8 +4,8 @@
 //notice : search for `BANANAS` for points to take note of
 //Check wrong password/email error messages
 
-//BANANAS: really bad; need to handle graceful exit when the database is disconnected while the user is logged in. right now it just crashes
-//After joining a community, should the homepage have All Posts - 1 post, Posts from other communities - 1 post. Or just have 2 posts.
+//Editing Post is goody except when you edit a linkflair it doesn't update UI on homepage until you select something else and come back to homepage
+//TODO: Implement delete buttons for edit community/post/comments
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Banner from './banner.jsx'
@@ -46,7 +46,7 @@ export default function Phreddit(props) {
         .catch((e) => {
             console.error(e);
         });
-    }, [user]);
+    }, [user, selectedItem]);
 
     let allVisibilityOff = () => {
         setShowHomePage(false);
@@ -103,7 +103,7 @@ export default function Phreddit(props) {
     }
 
     const allData = {communities, linkFlairs, posts, comments, selectedItem, selectedSortButton, searchTerms, user: user};
-    const allUpdaters = {updateCommunities, updateLinkFlairs, updatePosts, updateComments, setSelectedSortButton, setSelectedItem, setSearchTerms /*setUser: props.user.setUser*/};
+    const allUpdaters = {updateCommunities, updateLinkFlairs, updatePosts, updateComments, setSelectedSortButton, setSelectedItem, setSearchTerms};
     const allOpeners = {openHomePage, openSelectedPost, openCreateCommunity, openCreatePost, openCreateComment, openProfileView};
     const allPageViews = {showHomePage, showSelectedPost, showCreateCommunity, showCreatePost, showCreateComment, showProfileView};
 

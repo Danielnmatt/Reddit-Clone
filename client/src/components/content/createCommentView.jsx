@@ -1,21 +1,32 @@
 import '../../stylesheets/CreateCommentView.css'
 import '../../stylesheets/App.css'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {hyperLink} from '../../functions';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import {countComments} from '../../functions'
 axios.defaults.withCredentials = true;
 
 //App.js->phreddit.js->main.jsx->content.jsx->createCommentView.jsx
 const CreateCommentView = (props) => {
     const [body, setBody] = useState("");
     const navigate = useNavigate();
-    if(props.visibility === false){
-        return null;
-    }
 
     const resetInputs = () => {
         setBody("");
+    }
+
+    useEffect(() => {
+        if(props.allData.selectedItem === 'edit-comment-button' && props.editingComment){
+            setBody(props.editingComment.content);
+        }
+        if(props.allData.selectedItem !== 'edit-comment-button'){
+            resetInputs();
+        }
+    }, [props.allData.selectedItem, props.editingCommunity])
+
+    if(props.visibility === false){
+        return null;
     }
     
     let happenedAlready = false;
@@ -24,7 +35,7 @@ const CreateCommentView = (props) => {
         if((e.status === 401 || e.status === 403) && !happenedAlready){
             happenedAlready = true;
             alert("Your session is expired or invalidated. You will be redirected.");
-            axios.get("http://127.0.0.1:8000/auth/logout").then(res => console.log("logout success")).catch(e => console.log("logout unsuccessful"));
+            axios.get("http://127.0.0.1:8000/auth/logout").then(() => console.log("logout success")).catch(() => console.log("logout unsuccessful"));
             navigate("/")
         }
     }
@@ -64,35 +75,85 @@ const CreateCommentView = (props) => {
                 commentedBy: props.allData.user.displayName,
                 commentedDate: new Date(),
             }
+            if(props.allData.selectedItem === "edit-comment-button"){
+                const updatedComment = {content: body}
+                const res0 = await axios.put(`http://127.0.0.1:8000/comments/${props.editingComment.id}`, updatedComment);
 
-            try{
-                const res1 = await axios.post(`http://127.0.0.1:8000/comments`, newComment);
-                let newCommentObject = res1.data;
+                const res1 = await axios.get(`http://127.0.0.1:8000/posts/`);
+                const allPosts = res1.data;
 
-                if(props.comment){
-                    await axios.put(`http://127.0.0.1:8000/comments/${props.comment.url.replace('comments/', '')}`, {commentIDs: [...props.comment.commentIDs, newCommentObject.url.replace("comments/", "")]})
-                    resetInputs();
+                const res2 = await axios.get(`http://127.0.0.1:8000/comments/`);
+                const allComments = res2.data;
+                
+                let postObject;
+                allPosts.forEach(post => {
+                    let postComments = [];
+                    let commentIDs = post.commentIDs;
+                    let somethingWasAdded;
                     
-                    const res2 = await axios.get(`http://127.0.0.1:8000/comments`)
-                    props.allUpdaters.updateComments(res2.data);
-                    props.allOpeners.openSelectedPost({...props.post, commentCount: props.post.commentCount + 1});
-                }
+                    do {
+                        somethingWasAdded = false;
+                        for(let c = 0; c < allComments.length; c++){
+                            const comment = allComments[c];
+                            const newCommentID = comment.url.replace("comments/", "");
+                            if((!postComments.includes(comment)) && (commentIDs.includes(newCommentID))){
+                                postComments.push(comment);
+                                somethingWasAdded = true;
+                                console.log("match found? " + comment.url === res0.data.url);
+                            }
+                            else if((!postComments.includes(comment)) && (postComments.some(parentComment => parentComment.commentIDs.includes(newCommentID)))){
+                                postComments.push(comment);
+                                somethingWasAdded = true;
+                                console.log("match found? " + comment.url === res0.data.url);
+                            }
+                        }
+                    } while (somethingWasAdded);
+                    
+                    postComments.forEach((comment) => {
+                        if(comment.id === res0.data.id){
+                            postObject = post
+                        }
+                    })
+                })
 
-                else{
-                    const res2 = await axios.put(`http://127.0.0.1:8000/posts/${props.post.postID}`, {commentIDs: [...props.post.commentIDs, newCommentObject.url.replace("comments/", "")]});
-                    let updatedPostObject = res2.data;
-                    resetInputs();
-                    
-                    const res3 = await axios.get(`http://127.0.0.1:8000/posts/`);
-                    props.allUpdaters.updatePosts(res3.data);
-                    
-                    const res4 = await axios.get(`http://127.0.0.1:8000/comments`);
-                    props.allUpdaters.updateComments(res4.data);
-                    props.allOpeners.openSelectedPost({...props.post, commentIDs : updatedPostObject.commentIDs, commentCount: props.post.commentCount + 1});
-                }
+                const res3 = await axios.get(`http://127.0.0.1:8000/communities/posts/${postObject.id}`);
+                const community = res3.data[0];
+
+                const res4 = await axios.get(`http://127.0.0.1:8000/linkFlairs/${postObject.linkFlairID}`);
+                const linkFlair = res4.data[0]
+                const openablePost = {...postObject, postID: postObject.id, commentCount: countComments(postObject, 0, allComments), communityText: community.name, linkFlairText: linkFlair.content}
+                
+                props.allOpeners.openSelectedPost(openablePost)
             }
-            catch(e){
-                handlePossibleBadAuthentication(e);
+            else{
+                try{
+                    const res1 = await axios.post(`http://127.0.0.1:8000/comments`, newComment);
+                    let newCommentObject = res1.data;
+                    
+                    if(props.comment){//reply comment
+                        await axios.put(`http://127.0.0.1:8000/comments/${props.comment.url.replace('comments/', '')}`, {commentIDs: [...props.comment.commentIDs, newCommentObject.url.replace("comments/", "")]})
+                        resetInputs();
+                        
+                        const res2 = await axios.get(`http://127.0.0.1:8000/comments`)
+                        props.allUpdaters.updateComments(res2.data);
+                        props.allOpeners.openSelectedPost({...props.post, commentCount: props.post.commentCount + 1});
+                    }
+                    else{//direct comment
+                        const res2 = await axios.put(`http://127.0.0.1:8000/posts/${props.post.postID}`, {commentIDs: [...props.post.commentIDs, newCommentObject.url.replace("comments/", "")]});
+                        let updatedPostObject = res2.data;
+                        resetInputs();
+                        
+                        const res3 = await axios.get(`http://127.0.0.1:8000/posts/`);
+                        props.allUpdaters.updatePosts(res3.data);
+                        
+                        const res4 = await axios.get(`http://127.0.0.1:8000/comments`);
+                        props.allUpdaters.updateComments(res4.data);
+                        props.allOpeners.openSelectedPost({...props.post, commentIDs : updatedPostObject.commentIDs, commentCount: props.post.commentCount + 1});
+                    }
+                }
+                catch(e){
+                    handlePossibleBadAuthentication(e);
+                }
             }
         }
     }
@@ -104,9 +165,9 @@ const CreateCommentView = (props) => {
             <div id="create-comment-input-div">
                 <div className="create-comment-input-container" id="create-comment-content-container">
                     <label className="comment-label" htmlFor="create-comment-content">Body(required, max 500 characters):&nbsp;<span className="red-stars">*</span></label>
-                    <textarea onChange={(e) => {setBody(e.target.value)}} className="create-comment-input-field" type="text" id="create-comment-content" name="create-comment-content" maxLength="500" placeholder="Content..." required></textarea>
+                    <textarea onChange={(e) => {setBody(e.target.value)}} className="create-comment-input-field" type="text" id="create-comment-content" name="create-comment-content" maxLength="500" placeholder="Content..." value={body} required></textarea>
                 </div>
-                <button id="submit-comment-button" type="submit" onClick={submitComment}>Submit Comment</button>
+                <button id="submit-comment-button" type="submit" onClick={submitComment}>{props.allData.selectedItem === 'edit-comment-button' ? "Confirm Edit" : "Submit Comment"}</button>
             </div>
             </form>
         </div>

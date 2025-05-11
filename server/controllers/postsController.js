@@ -65,5 +65,19 @@ const deletePost = async (req, res) =>{
     }
 }
 
-const postsController = {getAllPosts, createPost, getPostByID, updatePost, deletePost}
+//Get all posts by Display Name
+const getPostsByDisplayName = async (req, res) => {
+    try{
+        const posts = await Post.find({postedBy: req.params.displayName})
+        if(!posts){
+            return res.status(404).send({error: `No posts by ${req.params.displayName}`});
+        }
+        res.status(200).send(posts);
+    }
+    catch(e){
+        res.status(500).send({error: "Geetting Posts by Display Name failed."});
+    }
+}
+
+const postsController = {getAllPosts, createPost, getPostByID, updatePost, deletePost, getPostsByDisplayName}
 module.exports = postsController

@@ -32,7 +32,6 @@ const userSchema = new Schema({
     },
     accountCreationDate: {
         type: Date,
-        required: true,
         default: Date.now
     }
     //this is an array of strings which is used to remember which posts the user has voted on, so they cant vote again

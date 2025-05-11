@@ -19,40 +19,19 @@ const SelectedPost = (props) => {
     const [isProcessingVote, setIsProcessingVote] = useState(10);//10 on page load, 0 when voting has started, 4 when it's finished (+1 per each axios call)
     const [posterDN, setPosterDN] = useState("");
     const [userCanVote, setUserCanVote] = useState(false);
-
+    const [userDN, setUserDN] = useState("");
+    const [userVotes, setUserVotes] = useState([]);
+    
     const navigate = useNavigate();
     let posterRepChange = 0;
     const isLoggedIn = props.allData?.user?.displayName !== "guest" && props.allData?.user?.email !== null;
     
     useEffect(() => {
         setUserCanVote(props.allData.user?.reputation >= 50 || false);
-    }, [props.allData.user?.reputation]);
-
-    useEffect(() => {
+        setUserDN(props.allData?.user?.displayName || "");
         setNumVotes(props.post?.votes || 0);
         setPosterDN(props.post?.postedBy || "");
-    }, [props.post?.votes, props.post?.postedBy]);
-
-    useEffect(() => {
-        const userAlreadyUpvoted = props.allData.user?.userVotes?.some(formattedString => formattedString === `posts/${props.post?.postID}+`);
-        const userAlreadyDownvoted = props.allData.user?.userVotes?.some(formattedString => formattedString === `posts/${props.post?.postID}-`);
-    
-        if(userAlreadyUpvoted){
-            setIsClickedUpvote(true);
-            setVoteText("+1");
-        }
-        else if(userAlreadyDownvoted){
-            setIsClickedDownvote(true);
-            setVoteText("-1");
-        }
-        else{
-            setVoteText("0");
-        }
-    }, [props.post?.postID, props.allData.user?.userVotes]);
-
-    if(props.visibility === false){
-        return null;
-    }
+    }, [props.allData.user?.reputation, props.allData?.user?.displayName, props.post?.votes, props.post?.postedBy]);
     
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {
@@ -60,14 +39,55 @@ const SelectedPost = (props) => {
         if((e.status === 401 || e.status === 403) && !happenedAlready){
             happenedAlready = true;
             alert("Your session is expired or invalidated. You will be redirected.");
-            axios.get("http://127.0.0.1:8000/auth/logout").then(res => console.log("logout success")).catch(e => console.log("logout unsuccessful"));
+            axios.get("http://127.0.0.1:8000/auth/logout").then(() => console.log("logout success")).catch(() => console.log("logout unsuccessful"));
             navigate("/")
         }
     }
-
+    
+    useEffect(() => {
+        const getVotes = async () => {
+            try{
+                if(!userDN){
+                    return;
+                }
+                const res1 = await axios.get(`http://127.0.0.1:8000/users/votes/displayName/${userDN}`);
+                setUserVotes(res1.data);
+            }
+            catch(e){
+                handlePossibleBadAuthentication(e);
+            }
+        }
+        getVotes();
+    }, [props?.post, props.allData?.user?.displayName])// BANANAS
+    
+    useEffect(() => {
+        const userAlreadyUpvoted = userVotes.some(formattedString => formattedString === `posts/${props.post.postID}+`);
+        const userAlreadyDownvoted = userVotes.some(formattedString => formattedString === `posts/${props.post.postID}-`);
+        
+        if(userAlreadyUpvoted){
+            setIsClickedUpvote(true);
+            setIsClickedDownvote(false);
+            setVoteText("+1");
+        }
+        else if(userAlreadyDownvoted){
+            setIsClickedDownvote(true);
+            setIsClickedUpvote(false);
+            setVoteText("-1");
+        }
+        else{
+            setIsClickedUpvote(false);
+            setIsClickedDownvote(false);
+            setVoteText("0");
+        }
+    }, [props.post, userVotes]);
+    
+    if(props.visibility === false){
+        return null;
+    }
+    
     const handleBothVotes = (newVotes, plusOrMinus) => {
         setNumVotes(newVotes);
-        const updatedPost = {...props.post, votes: newVotes};
+        const updatedPost = {votes: newVotes};
         axios.put(`http://127.0.0.1:8000/posts/${props.post.postID}`, updatedPost).catch(e => handlePossibleBadAuthentication(e)).finally(() => setIsProcessingVote(isProcessingVote + 1));
         
         const addendString = `posts/${props.post.postID}${plusOrMinus}`;

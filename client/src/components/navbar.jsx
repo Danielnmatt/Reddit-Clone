@@ -1,11 +1,9 @@
 import '../stylesheets/Navbar.css'
 import '../stylesheets/App.css'
 import CommunitiesListing from './communitiesListing.jsx';
-import {useState} from 'react';
 
 //App.js->phreddit.js->main.jsx->navbar.jsx
 const Navbar = (props) => {
-    
     const handleHomeButton = () => {
         props.allUpdaters.setSearchTerms("");
         props.allUpdaters.updatePosts(props.allData.posts);

@@ -44,7 +44,6 @@ const Banner = (props) => {
     }
 
     const handleLogout = () => {
-        //props.allUpdaters.setSelectedItem("logout-button");
         axios.get('http://127.0.0.1:8000/auth/logout', {withCredentials: true})
         navigate('/');
     }
@@ -85,8 +84,8 @@ const Banner = (props) => {
                 </form>
             </search>
             <div id="banner-button-container">
-                <button id="new-post-button" className="clickables_group4" type="button" onClick={handleCreatePost} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringCreatePost(true)} onMouseOut={() => setIsHoveringCreatePost(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringCreatePost || props.allData.selectedItem === "new-post-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
-                    Create New Post
+                <button id="new-post-button" className="clickables_group4" type="button" onClick={handleCreatePost} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringCreatePost(true)} onMouseOut={() => setIsHoveringCreatePost(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringCreatePost || props.allData.selectedItem === "new-post-button" || props.allData.selectedItem === "edit-post-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
+                    {props.allData.selectedItem === 'edit-post-button' ? "Edit Post" : "Create New Post"}
                 </button>
                 <button id="profile-button" className="clickables_group4" type="button" onClick={handleProfiles} disabled={!isLoggedIn} onMouseOver={() => setIsHoveringProfile(true)} onMouseOut={() => setIsHoveringProfile(false)} style={{backgroundColor: isLoggedIn ? ((isHoveringProfile || props.allData.selectedItem === "profile-button") ? ("#FF5700") : ("#E5EBEE")) : ('#CCCCCC'), cursor: isLoggedIn ? "pointer" : "not-allowed"}}>
                     {isLoggedIn ? props.allData?.user?.displayName : "Guest"}

@@ -42,8 +42,8 @@ const CommunitiesListing = (props) => {
 
     return(
         <div id="communities">
-            <button id="create-communities-button" className="clickables_group4" type="button" onClick={props.handlers.handleCreateCommunities} onMouseOver={() => setIsHoveringCreateCommunity(true)} onMouseOut={() => setIsHoveringCreateCommunity(false)} style={{backgroundColor: ((isHoveringCreateCommunity || props.allData.selectedItem === "create-communities-button") ? ("#FF5700") : ("#E5EBEE")), cursor: "pointer"}}>
-                Create New Community
+            <button id="create-communities-button" className="clickables_group4" type="button" onClick={props.handlers.handleCreateCommunities} onMouseOver={() => setIsHoveringCreateCommunity(true)} onMouseOut={() => setIsHoveringCreateCommunity(false)} style={{backgroundColor: ((isHoveringCreateCommunity || props.allData.selectedItem === "create-communities-button" || props.allData.selectedItem === "edit-community-button") ? ("#FF5700") : ("#E5EBEE")), cursor: "pointer"}}>
+                {props.allData.selectedItem === "edit-community-button" ? "Edit Community" : "Create New Community"}
             </button>
             <h1 className='community-text h1-fixer'>Joined Communities</h1>
             <ul className="community-list">

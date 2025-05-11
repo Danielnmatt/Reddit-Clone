@@ -33,28 +33,23 @@ const Post = (props) => {
             console.error(e);
         })
     }
+    
 
     useEffect(() => {
-        let result;
-        axios.get(`http://127.0.0.1:8000/communities/posts/${props.postData.postID}`)
-        .then((res) => {
-            result = (res.data[0]).name;
-            setCommunityText(result);
-            if(props.postData.linkFlairID){
+        const temp = async () => {
+            try{
+                const res1 = await axios.get(`http://127.0.0.1:8000/communities/posts/${props.postData.postID}`)
+                setCommunityText((res1.data[0]).name);
                 if(props.postData.linkFlairID !== ''){
-                    axios.get(`http://127.0.0.1:8000/linkFlairs/${props.postData.linkFlairID}`)
-                    .then((res) => {
-                        setLinkFlairText(res.data[0].content);
-                    })
-                    .catch((e) => {
-                        console.error(e);
-                    })
+                    const res2 = await axios.get(`http://127.0.0.1:8000/linkFlairs/${props.postData.linkFlairID}`)
+                    setLinkFlairText(res2.data[0].content);
                 }
             }
-        })
-        .catch((e) => {
-            console.error(e);
-        })
+            catch(e){
+                console.error(e);
+            }
+        }
+        temp();
     }, [props.allData.selectedItem])
 
     return(

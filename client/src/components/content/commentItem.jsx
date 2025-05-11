@@ -16,18 +16,28 @@ const CommentItem = (props) => {
     const [isProcessingVote, setIsProcessingVote] = useState(10);//10 on page load, 0 when voting has started, 4 when it's finished (+1 per each axios call)
     const [posterDN, setPosterDN] = useState("");
     const [userCanVote, setUserCanVote] = useState(false);
+    const [commentContent, setCommentContent] = useState("");
     const navigate = useNavigate();
     let posterRepChange = 0;
     const isLoggedIn = props.allData?.user?.displayName !== "guest" && props.allData?.user?.email !== null;
-
-    useEffect(() => {
-        setUserCanVote(props.allData.user?.reputation >= 50 || false);
-    }, [props.allData.user?.reputation]);
     
     useEffect(() => {
-        setNumVotes(props.comment?.votes || 0);
-        setPosterDN(props.comment?.commentedBy || "");
-    }, [props.comment?.votes, props.comment?.commentedBy]);
+        const temp = async() =>{
+            setNumVotes(props.comment?.votes || 0);
+            setPosterDN(props.comment?.commentedBy || "");
+            setUserCanVote(props.allData.user?.reputation >= 50 || false);
+            const res1 = await axios.get(`http://127.0.0.1:8000/comments/${props.comment.id}`);
+            setCommentContent(res1.data[0].content)
+        }
+        temp();
+    }, [props.comment?.votes, props.comment?.commentedBy, props.allData.user?.reputation, props.allData.selectedItem]);
+
+    useEffect(() => {
+        setIsHoveringUpvote(false);
+        setIsClickedUpvote(false);
+        setIsHoveringDownvote(false)
+        setIsClickedDownvote(false)
+    }, [props.post])
 
     useEffect(() => {
         const userAlreadyUpvoted = props.allData.user?.userVotes?.some(formattedString => formattedString === `comments/${props.comment?.id}+`);
@@ -134,10 +144,11 @@ const CommentItem = (props) => {
         setIsClickedUpvote(false);
     }
 
+
     return(
         <div className="comment-item" style={{marginLeft: props.marginLeft + '%'}}>
             <p className="comment-info">{`${props.comment.commentedBy}`} | {timestamp(props.comment.commentedDate)}<span style={{display: (isLoggedIn ? "none" : "inline"), color: "#747F84"}}> | Votes: {numVotes}</span></p>
-            <p className="comment-content">{hyperLink(props.comment.content, false)}</p>
+            <p className="comment-content">{hyperLink(commentContent, false)}</p>
 
             <div style={{display: (isLoggedIn ? "block" : "none")}}>
                 <button className="reply-button" onClick={() => props.allOpeners.openCreateComment(props.comment)}>Reply</button>
@@ -153,7 +164,6 @@ const CommentItem = (props) => {
                     </svg>
                 </button>
             </div>
-            
         </div>
     )
 }

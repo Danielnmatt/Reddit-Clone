@@ -16,6 +16,9 @@ router.get('/:postID', postsController.getPostByID);
 router.put('/:postID', authController.authenticateUser, postsController.updatePost);
 
 //Delete a Post
-router.delete('/:postID', postsController.createPost);
+router.delete('/:postID', postsController.deletePost);
+
+//Get all posts by Display Name
+router.get('/posts/:displayName', authController.authenticateUser, postsController.getPostsByDisplayName);
 
 module.exports = router;

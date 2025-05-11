@@ -18,6 +18,9 @@ const Content = (props) => {
     const [filteredPostArray, setFilteredPostArray] = useState([]);
     const [filteredCommentsArray, setFilteredCommentsArray] = useState([]);
     const [communityHeaderInfo, setCommunityHeaderInfo] = useState(["", "", "", ""]);
+    const [editingPost, setEditingPost] = useState(null);
+    const [editingCommunity, setEditingCommunity] = useState(null);
+    const [editingComment, setEditingComment] = useState(null);
 
     useEffect(() => {
         const excludedWords = [
@@ -156,15 +159,17 @@ const Content = (props) => {
                 allData={props.allData}
                 allUpdaters={props.allUpdaters}
                 allOpeners={props.allOpeners} 
-                visibility={props.allPageViews.showCreateCommunity} 
+                visibility={props.allPageViews.showCreateCommunity}
+                editingCommunity={editingCommunity}
             />
 
             {/* CreatePostView */}
-            <CreatePostView 
+            <CreatePostView
                 allData={props.allData}
                 allUpdaters={props.allUpdaters}
                 allOpeners={props.allOpeners}
-                visibility={props.allPageViews.showCreatePost} 
+                visibility={props.allPageViews.showCreatePost}
+                editingPost={editingPost}
                 defaultValue="Select a Community (required)"
             />
 
@@ -176,6 +181,7 @@ const Content = (props) => {
                 post={props.selectedPost}
                 comment={props.selectedComment}
                 visibility={props.allPageViews.showCreateComment} 
+                editingComment={editingComment}
             />
 
             {/* ProfileView */}
@@ -183,6 +189,9 @@ const Content = (props) => {
                 allData={props.allData}
                 allUpdaters={props.allUpdaters}
                 allOpeners={props.allOpeners}
+                setEditingPost={setEditingPost}
+                setEditingCommunity={setEditingCommunity}
+                setEditingComment={setEditingComment}
             />
         </div>
     );

@@ -38,7 +38,21 @@ const getUserReputationByDisplayName = async (req, res) =>{
         res.send(user.reputation);
     }
     catch(e){
-        res.status(500).send({error: "Getting User failed. GETUSERBYID"});
+        res.status(500).send({error: "Getting User failed"});
+    }
+}
+
+//get User's votes by displayName
+const getUserVotesByDisplayName = async (req, res) => {
+    try{
+        const user = await User.findOne({displayName: req.params.displayName})
+        if(!user){
+            return res.status(404).send({error: "User not found."});
+        }
+        res.send(user.userVotes);
+    }
+    catch(e){
+        res.status(500).send({error: "Getting User failed"});
     }
 }
 
@@ -102,5 +116,5 @@ const getUserByEmail = async (req, res) =>{
     }
 }
 
-const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail, updateUserByDisplayName, getUserReputationByDisplayName};
+const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail, updateUserByDisplayName, getUserReputationByDisplayName, getUserVotesByDisplayName};
 module.exports = usersController;

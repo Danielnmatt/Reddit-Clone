@@ -86,7 +86,7 @@
     border: none;
     border-radius: 10px;
     background-color: #e5ebee;
-    display: inline;
+    /* display: inline; */
     padding: 10px;
 }
 

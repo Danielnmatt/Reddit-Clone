@@ -13,7 +13,7 @@ export function UserContextProvider({children}){
             .then((res) => {
                 if(res.data){
                     axios.get(`http://127.0.0.1:8000/users/${res.data}`)
-                    .then((res) => { 
+                    .then((res) => {
                         const user = {
                             displayName: res.data[0].displayName,
                             email: res.data[0].email,
@@ -24,6 +24,10 @@ export function UserContextProvider({children}){
                         }
                         setUser(user);
                     })
+                    .catch(() => {
+                        axios.get("http://127.0.0.1:8000/auth/logout")
+                    });
+                    
                 }
                 else{
                     setUser({displayName: "guest", email: null})

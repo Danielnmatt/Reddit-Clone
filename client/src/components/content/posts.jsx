@@ -7,7 +7,6 @@ const Posts = (props) => {
     if(props.visibility === false){
         return null;
     }
-
     
     const isLoggedIn = props.allData?.user?.displayName !== "guest" && props.allData?.user?.email !== null;
     let postsInOrder_joinedComms = [];
@@ -63,7 +62,6 @@ const Posts = (props) => {
                 } while (somethingWasAdded);
             }
         });
-
 
         switch(props.allData.selectedSortButton){
             case "newest-button":
