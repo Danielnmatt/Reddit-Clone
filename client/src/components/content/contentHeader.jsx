@@ -15,13 +15,6 @@ const ContentHeader = (props) => {
         setCommunity(props.allData?.selectedItem?.replace("communities/", "") || null);
         setDisplayValue(props.allData?.selectedItem?.includes('communities/') && isLoggedIn ? "flex" : "none");
     }, [props.allData?.selectedItem]);
-
-    // useEffect(() => {
-    //     if(!props.allData.selectedItem){
-    //         return;
-    //     }
-    //     setDisplayValue(props.allData.selectedItem.includes('communities/') && isLoggedIn ? "flex" : "none")
-    // }, [props.allData.selectedItem, joinOrLeave]);
     
     useEffect(() => {
         if(!props.allData.selectedItem){

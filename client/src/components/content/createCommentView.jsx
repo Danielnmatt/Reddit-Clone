@@ -122,7 +122,7 @@ const CreateCommentView = (props) => {
                 const res4 = await axios.get(`http://127.0.0.1:8000/linkFlairs/${postObject.linkFlairID}`);
                 const linkFlair = res4.data[0]
                 const openablePost = {...postObject, postID: postObject.id, commentCount: countComments(postObject, 0, allComments), communityText: community.name, linkFlairText: linkFlair.content}
-                
+                props.allUpdaters.setSelectedItem(null);
                 props.allOpeners.openSelectedPost(openablePost)
             }
             else{
@@ -136,6 +136,7 @@ const CreateCommentView = (props) => {
                         
                         const res2 = await axios.get(`http://127.0.0.1:8000/comments`)
                         props.allUpdaters.updateComments(res2.data);
+                        props.allUpdaters.setSelectedItem(null);
                         props.allOpeners.openSelectedPost({...props.post, commentCount: props.post.commentCount + 1});
                     }
                     else{//direct comment
@@ -148,6 +149,7 @@ const CreateCommentView = (props) => {
                         
                         const res4 = await axios.get(`http://127.0.0.1:8000/comments`);
                         props.allUpdaters.updateComments(res4.data);
+                        props.allUpdaters.setSelectedItem('home-button');
                         props.allOpeners.openSelectedPost({...props.post, commentIDs : updatedPostObject.commentIDs, commentCount: props.post.commentCount + 1});
                     }
                 }
@@ -157,7 +159,7 @@ const CreateCommentView = (props) => {
             }
         }
     }
-    
+
     return (
         <div id="create-comment-view">
             <h1 id="create-comment-view-title" className='h1-fixer'>Add a Comment</h1>
@@ -167,7 +169,10 @@ const CreateCommentView = (props) => {
                     <label className="comment-label" htmlFor="create-comment-content">Body(required, max 500 characters):&nbsp;<span className="red-stars">*</span></label>
                     <textarea onChange={(e) => {setBody(e.target.value)}} className="create-comment-input-field" type="text" id="create-comment-content" name="create-comment-content" maxLength="500" placeholder="Content..." value={body} required></textarea>
                 </div>
-                <button id="submit-comment-button" type="submit" onClick={submitComment}>{props.allData.selectedItem === 'edit-comment-button' ? "Confirm Edit" : "Submit Comment"}</button>
+                <div id="create-comment-button-container">
+                    <button id="submit-comment-button" className="create-comment-buttons" type="submit"  onClick={submitComment}>{props.allData.selectedItem === 'edit-comment-button' ? "Confirm Edit" : "Submit Comment"}</button>
+                    <button id="delete-comment-button" className="create-comment-buttons" type="submit" style={{display: props.allData.selectedItem === 'edit-comment-button' ? "block" : "none"}} onClick={deleteComment}>Delete Comment</button>
+                </div>
             </div>
             </form>
         </div>

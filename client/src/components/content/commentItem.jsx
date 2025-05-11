@@ -149,7 +149,6 @@ const CommentItem = (props) => {
         <div className="comment-item" style={{marginLeft: props.marginLeft + '%'}}>
             <p className="comment-info">{`${props.comment.commentedBy}`} | {timestamp(props.comment.commentedDate)}<span style={{display: (isLoggedIn ? "none" : "inline"), color: "#747F84"}}> | Votes: {numVotes}</span></p>
             <p className="comment-content">{hyperLink(commentContent, false)}</p>
-
             <div style={{display: (isLoggedIn ? "block" : "none")}}>
                 <button className="reply-button" onClick={() => props.allOpeners.openCreateComment(props.comment)}>Reply</button>
                 <button className="vote-button" disabled={isProcessingVote < 4 || !userCanVote} style={{backgroundColor: (((isClickedUpvote || isHoveringUpvote) && userCanVote) ? "#bcc4c4" : "#e5ebee"), cursor: (userCanVote ? "pointer" : "not-allowed")}} title={userCanVote ? "" : "     Your reputation is too low to vote."} onClick={handleClickUpvote} onMouseOver={() => setIsHoveringUpvote(true)} onMouseOut={() => setIsHoveringUpvote(false)}>

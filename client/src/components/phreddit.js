@@ -6,6 +6,7 @@
 
 //Editing Post is goody except when you edit a linkflair it doesn't update UI on homepage until you select something else and come back to homepage
 //TODO: Implement delete buttons for edit community/post/comments
+//When creating a post, selecting the linkflair don't be goody on UI but actually works correctly
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Banner from './banner.jsx'
@@ -113,8 +114,8 @@ export default function Phreddit(props) {
             <link rel="preconnect" href="https://fonts.gstatic.com"/>
             <link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet"/>
             <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet"/>
-            
-            <Banner 
+    
+            <Banner
                 allOpeners={allOpeners}
                 allData={allData}
                 allUpdaters={allUpdaters}

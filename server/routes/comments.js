@@ -21,4 +21,7 @@ router.delete('/:commentID', commentsController.deleteComment);
 //Get Comments by Post ID
 router.get('/posts/:postID', commentsController.getCommentsByPostID);
 
+//Delete comments and its replies
+router.delete('/comments/:commentID', commentsController.deleteCommentAndReplies);
+
 module.exports = router;

@@ -81,5 +81,32 @@ const getCommentsByPostID = async (req, res) =>{
     }
 }
 
-const commentController = {getAllComments, createComment, getCommentByID, updateComment, deleteComment, getCommentsByPostID}; 
+const deleteCommentAndReplies = async(req, res) =>{
+    try{
+        const originalComment = await Comment.findById(req.params.commentID);
+        if (!originalComment) {
+            return res.status(404).send({error: "Comment not found."});
+        }
+
+        const allComments = await Comment.find({});
+        await Promise.all(allComments.map(async(comment) => {
+            if(comment.commentIDs.includes(originalComment._id.toString())){
+                await Comment.findByIdAndUpdate(comment._id, {
+                    commentIDs: comment.commentIDs.filter(commentID => 
+                        commentID.toString() !== originalComment._id.toString()
+                    )
+                });
+            }
+        }));
+
+        await Comment.findByIdAndDelete(req.params.commentID);
+        
+        res.send({message: "Comment and its references deleted successfully"});
+    } 
+    catch(e){
+        res.status(500).send({error: "Deleting Comment failed."});
+    }
+}
+
+const commentController = {getAllComments, createComment, getCommentByID, updateComment, deleteComment, getCommentsByPostID, deleteCommentAndReplies}; 
 module.exports = commentController;

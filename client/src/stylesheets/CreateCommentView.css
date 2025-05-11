@@ -51,7 +51,7 @@
     resize: none;
 }
 
-#submit-comment-button{
+.create-comment-buttons{
     border-radius: 8px;
     width: 10rem;
     min-height: 3rem;
@@ -59,8 +59,14 @@
     border: none;
 }
 
-#submit-comment-button:hover{
+.create-comment-buttons:hover{
     cursor: pointer;
     transition: 0.5s;
     background-color: #C0C9CE;
+}
+
+#create-comment-button-container{
+    justify-content: space-between;
+    display: flex;
+    width: 56rem;
 }
