@@ -17,8 +17,8 @@ const Post = (props) => {
         }
         props.allOpeners.openSelectedPost(postWithLinkFlairTextAndCommunityText);
         const {commentCount, postID, ...post} = props.postData;
-        const updatedPost = {...post, views: props.postData.views += 1};
-        axios.put(`http://127.0.0.1:8000/posts/${props.postData.postID}`, updatedPost)
+        const updatedPost = {views: props.postData.views += 1};
+        axios.put(`http://127.0.0.1:8000/posts/view/${props.postData.postID}`, updatedPost)
         .then((res) => {
             axios.get(`http://127.0.0.1:8000/posts/`)
             .then((res) => {
@@ -39,8 +39,8 @@ const Post = (props) => {
         const temp = async () => {
             try{
                 const res1 = await axios.get(`http://127.0.0.1:8000/communities/posts/${props.postData.postID}`)
-                setCommunityText((res1.data[0]).name);
-                if(props.postData.linkFlairID !== ''){
+                setCommunityText((res1.data[0])?.name || "");
+                if(props.postData.linkFlairID && props.postData.linkFlairID !== ''){
                     const res2 = await axios.get(`http://127.0.0.1:8000/linkFlairs/${props.postData.linkFlairID}`)
                     setLinkFlairText(res2.data[0].content);
                 }

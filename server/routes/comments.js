@@ -16,7 +16,7 @@ router.get('/:commentID', commentsController.getCommentByID);
 router.put('/:commentID', authController.authenticateUser, commentsController.updateComment);
 
 //Delete a Comment
-router.delete('/:commentID', commentsController.deleteComment);
+router.delete('/:commentID', authController.authenticateUser, commentsController.deleteComment);
 
 //Get Comments by Post ID
 router.get('/posts/:postID', commentsController.getCommentsByPostID);

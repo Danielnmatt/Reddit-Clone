@@ -16,7 +16,7 @@ router.get('/:communityID', communitiesController.getCommunityByID);
 router.put('/:communityID', authController.authenticateUser, communitiesController.updateCommunity);
 
 //Delete a community
-router.delete('/:communityID', communitiesController.deleteCommunity);
+router.delete('/:communityID', authController.authenticateUser, communitiesController.deleteCommunity);
 
 //Get community by postID
 router.get('/posts/:postID', communitiesController.getCommunityByPostID);

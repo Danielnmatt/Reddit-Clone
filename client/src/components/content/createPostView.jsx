@@ -16,6 +16,7 @@ const CreatePostView = (props) => {
     const [showCustomFlairField, setShowCustomFlairField] = useState(false);
     const [editingPostCommunity, setEditingPostCommunity] = useState(null);
     const navigate = useNavigate();
+    const isLoggedIn = props.allData?.user?.displayName !== "guest" && props.allData?.user?.email !== null;
     const resetInputs = () => {
         setCommunity("");
         setTitle("");
@@ -55,7 +56,7 @@ const CreatePostView = (props) => {
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {
         console.error(e);
-        if((e.status === 401 || e.status === 403) && !happenedAlready){
+        if((e.status === 401 || e.status === 403) && !happenedAlready && isLoggedIn){
             happenedAlready = true;
             alert("Your session is expired or invalidated. You will be redirected.");
             axios.get("http://127.0.0.1:8000/auth/logout").then(res => console.log("logout success")).catch(e => console.log("logout unsuccessful"));
@@ -209,6 +210,55 @@ const CreatePostView = (props) => {
     props.allData.communities.forEach(community => community.members.includes(props.allData.user.displayName) ? joinedComms.push(community) : otherComms.push(community));
     const allCommunities = joinedComms.concat(otherComms);
 
+    const handleDeletePost = async (e) => {
+        e.preventDefault();
+
+        //getting all comments associated with this post
+        const res1 = await axios.get("http://127.0.0.1:8000/comments");
+        const allComments = res1.data;
+        let postComments = [];
+
+        const res1_5 = await axios.get(`http://127.0.0.1:8000/${props.editingPost.url}`);
+        const commentIDs = res1_5.data[0].commentIDs;
+        let somethingWasAdded;
+        
+        do {
+            somethingWasAdded = false;
+            for(let c = 0; c < allComments.length; c++){
+                const comment = allComments[c];
+                const newCommentID = comment.url.replace("comments/", "");
+                if((!postComments.includes(comment)) && (commentIDs.includes(newCommentID))){
+                    postComments.push(comment);
+                    somethingWasAdded = true;
+                }
+                else if((!postComments.includes(comment)) && (postComments.some(parentComment => parentComment.commentIDs.includes(newCommentID)))){
+                    postComments.push(comment);
+                    somethingWasAdded = true;
+                }
+            }
+        } while (somethingWasAdded);
+
+        //deleting all comments associated with this post
+        for(const comment of postComments){
+            await axios.delete(`http://127.0.0.1:8000/${comment.url}`);
+        }
+
+        const res3 = await axios.get("http://127.0.0.1:8000/comments");
+        const allCommentsUpdated = res3.data;
+        props.allUpdaters.updateComments(allCommentsUpdated);
+
+        //delete post itself
+        await axios.delete(`http://127.0.0.1:8000/${props.editingPost.url}`);
+        const res5 = await axios.get("http://127.0.0.1:8000/posts");
+        props.allUpdaters.updatePosts(res5.data);
+
+        resetInputs();
+        props.allUpdaters.setSearchTerms("");
+        props.allUpdaters.setSelectedSortButton("newest-button");
+        props.allUpdaters.setSelectedItem("home-button");
+        props.allOpeners.openHomePage();
+    }
+
     return (
         <div id="create-post-view">
             <h1 id="create-post-view-text" className='h1-fixer'>{props.allData.selectedItem == 'edit-post-button' ? `Editing '${props.editingPost.title}'` : "Create Post"}</h1>
@@ -241,7 +291,10 @@ const CreatePostView = (props) => {
                         <label htmlFor="post-body-input" id="post-body-text" name="post-body">Body (required):&nbsp;<span className="red-stars">*</span></label>
                         <textarea onChange={(e) => setBody(e.target.value)} className="post-input-field" type="text" id="post-body-input" name="post-body" placeholder="Content..." required value={body}></textarea>
                     </div>
-                    <button onClick={submitPost} id="submit-post-button" type="submit">{props.allData.selectedItem === 'edit-post-button' ? "Confirm Edit" : "Submit Post"}</button>
+                    <div style={{display: "flex", flexDirection: 'row'}}>
+                        <button onClick={submitPost} className="handle-post-button" type="submit">{props.allData.selectedItem === 'edit-post-button' ? "Confirm Edit" : "Submit Post"}</button>
+                        <button onClick={(e) => handleDeletePost(e)} className="handle-post-button" style={{display: props.allData.selectedItem === 'edit-post-button' ? 'inline' : 'none'}}>Delete Post</button>
+                    </div>
                 </div>
             </form>
 

@@ -23,6 +23,7 @@ const ProfileView = (props) => {
     const [commentKeys, setCommentKeys] = useState([]);
 
     const navigate = useNavigate();
+    const isLoggedIn = props.allData?.user?.displayName !== "guest" && props.allData?.user?.email !== null;
 
     useEffect(() => {
         setSelectedViewButton("posts-button");
@@ -36,7 +37,7 @@ const ProfileView = (props) => {
 
         const doStuff = async () => {
             try{
-                if(!userDN){
+                if(!userDN || !isLoggedIn){
                     return null;
                 }
                 const res = await axios.get(`http://127.0.0.1:8000/users/reputation/displayName/${userDN}`); 
@@ -113,6 +114,10 @@ const ProfileView = (props) => {
                         }
                     }
                 });
+                if(myComments.length === 0){
+                    setPostsAndComments([]);
+                    setCommentKeys([]);
+                }
 
                 setPostsAndComments(prev => [...prev, ...tmpPostsAndComments]);
                 setCommentKeys(prev => [...prev, ...tmpCommentKeys]);
@@ -125,7 +130,7 @@ const ProfileView = (props) => {
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {
         console.error(e);
-        if((e.status === 401 || e.status === 403) && !happenedAlready){
+        if((e.status === 401 || e.status === 403) && !happenedAlready && isLoggedIn){
             happenedAlready = true;
             alert("Your session is expired or invalidated. You will be redirected.");
             axios.get("http://127.0.0.1:8000/auth/logout").then(() => console.log("logout success")).catch(() => console.log("logout unsuccessful"));

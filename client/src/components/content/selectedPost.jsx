@@ -36,7 +36,7 @@ const SelectedPost = (props) => {
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {
         console.error(e);
-        if((e.status === 401 || e.status === 403) && !happenedAlready){
+        if((e.status === 401 || e.status === 403) && !happenedAlready && isLoggedIn){
             happenedAlready = true;
             alert("Your session is expired or invalidated. You will be redirected.");
             axios.get("http://127.0.0.1:8000/auth/logout").then(() => console.log("logout success")).catch(() => console.log("logout unsuccessful"));
@@ -47,7 +47,7 @@ const SelectedPost = (props) => {
     useEffect(() => {
         const getVotes = async () => {
             try{
-                if(!userDN){
+                if(!userDN || !isLoggedIn){
                     return;
                 }
                 const res1 = await axios.get(`http://127.0.0.1:8000/users/votes/displayName/${userDN}`);

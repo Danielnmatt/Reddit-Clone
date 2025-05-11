@@ -51,15 +51,16 @@
     resize: none;
 }
 
-#submit-comment-button{
+.handle-comment-button{
     border-radius: 8px;
     width: 10rem;
     min-height: 3rem;
     max-height: 3rem;
     border: none;
+    margin-right: 2%;
 }
 
-#submit-comment-button:hover{
+.handle-comment-button:hover{
     cursor: pointer;
     transition: 0.5s;
     background-color: #C0C9CE;
