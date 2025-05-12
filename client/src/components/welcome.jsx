@@ -14,7 +14,7 @@ const Welcome = () => {
         try{
             await axios.get("http://127.0.0.1:8000/auth/logout")
             await axios.get("http://127.0.0.1:8000/auth/guest")
-            .then((res) => setUser(res.data.user))
+            .then((res) => {setUser(res.data.user); navigate("/phreddit")})
             .catch((e) => console.error(e));
         }
         catch(e){
@@ -31,7 +31,8 @@ const Welcome = () => {
                 id: user.data[0]._id,//why do we need this one
                 userVotes: user.data[0].userVotes,
                 reputation: user.data[0].reputation,
-                accountCreationDate: user.data[0].accountCreationDate
+                accountCreationDate: user.data[0].accountCreationDate,
+                role: user.data[0].role
             });
             navigate('/phreddit')
         }

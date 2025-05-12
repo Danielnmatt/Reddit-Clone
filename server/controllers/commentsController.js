@@ -81,7 +81,21 @@ const getCommentsByPostID = async (req, res) =>{
     }
 }
 
-const deleteCommentAndReplies = async(req, res) =>{
+//get comments by display name
+const getCommentsByDisplayName = async (req, res) => {
+    try{
+        const comments = await Comment.find({commentedBy: req.params.displayName});
+        if(!comments){
+            return res.status(404).send({error: "Comments associated with display name not found."});
+        }
+        res.send(comments);
+    }
+    catch(e){
+        res.status(500).send({error: "Getting Comments failed."});
+    }
+}
+
+const deleteCommentAndReplies = async (req, res) =>{
     try{
         const originalComment = await Comment.findById(req.params.commentID);
         if (!originalComment) {
@@ -91,6 +105,8 @@ const deleteCommentAndReplies = async(req, res) =>{
         const allComments = await Comment.find({});
         await Promise.all(allComments.map(async(comment) => {
             if(comment.commentIDs.includes(originalComment._id.toString())){
+                console.log(comment)
+                console.log(originalComment)
                 await Comment.findByIdAndUpdate(comment._id, {
                     commentIDs: comment.commentIDs.filter(commentID => 
                         commentID.toString() !== originalComment._id.toString()
@@ -98,8 +114,6 @@ const deleteCommentAndReplies = async(req, res) =>{
                 });
             }
         }));
-
-        await Comment.findByIdAndDelete(req.params.commentID);
         
         res.send({message: "Comment and its references deleted successfully"});
     } 
@@ -108,5 +122,5 @@ const deleteCommentAndReplies = async(req, res) =>{
     }
 }
 
-const commentController = {getAllComments, createComment, getCommentByID, updateComment, deleteComment, getCommentsByPostID, deleteCommentAndReplies}; 
+const commentController = {getAllComments, createComment, getCommentByID, updateComment, deleteComment, getCommentsByPostID, deleteCommentAndReplies, getCommentsByDisplayName}; 
 module.exports = commentController;

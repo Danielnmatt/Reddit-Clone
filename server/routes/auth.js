@@ -16,4 +16,5 @@ router.get('/profile', authController.getUserProfile);
 
 //Guest User
 router.get('/guest', authController.guestUser);
+
 module.exports = router;

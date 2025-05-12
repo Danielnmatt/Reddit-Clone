@@ -3,20 +3,18 @@
 //length restriction on account details ??
 //notice : search for `BANANAS` for points to take note of
 //Check wrong password/email error messages
-
-//Editing Post is goody except when you edit a linkflair it doesn't update UI on homepage until you select something else and come back to homepage
-//TODO: Implement delete buttons for edit community/post/comments
-//When creating a post, selecting the linkflair don't be goody on UI but actually works correctly
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Banner from './banner.jsx'
 import Main from './main.jsx'
 import {sortBy} from '../functions.js';
-import {useContext} from 'react';
+import {useContext, useRef} from 'react';
 import {UserContext} from '../userContext.jsx'
+import {useNavigate} from 'react-router-dom'
 axios.defaults.withCredentials = true;
 
 export default function Phreddit(props) {
+    const alertTriggeredRef = useRef(false);
     const {user} = useContext(UserContext);
     const [communities, setCommunities] = useState([]);
     const [linkFlairs, setLinkFlairs] = useState([]);
@@ -25,6 +23,7 @@ export default function Phreddit(props) {
     const [selectedItem, setSelectedItem] = useState("home-button");
     const [selectedSortButton, setSelectedSortButton] = useState("newest-button");
     const [searchTerms, setSearchTerms] = useState("");
+    const navigate = useNavigate();
     
     const [showHomePage, setShowHomePage] = useState(true);
     const [showSelectedPost, setShowSelectedPost] = useState(false);
@@ -45,6 +44,11 @@ export default function Phreddit(props) {
             setComments(res.data.comments);
         })
         .catch((e) => {
+            if (!alertTriggeredRef.current) {
+                alertTriggeredRef.current = true;
+                alert("Database Error");
+            }
+            navigate('/');
             console.error(e);
         });
     }, [user, selectedItem]);

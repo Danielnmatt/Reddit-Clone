@@ -64,15 +64,16 @@
     box-sizing: border-box;
 }
 
-#engender-community-button{
+.handle-community-button{
     border-radius: 8px;
     width: 10rem;
     min-height: 3rem;
     max-height: 3rem;
     border: none;
+    margin-right: 2%;
 }
 
-#engender-community-button:hover{
+.handle-community-button:hover{
     cursor: pointer;
     transition: 0.5s;
     background-color: #C0C9CE;

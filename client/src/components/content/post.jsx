@@ -9,29 +9,17 @@ axios.defaults.withCredentials = true;
 const Post = (props) => {
     const [communityText, setCommunityText] = useState("");
     const [linkFlairText, setLinkFlairText] = useState("");
-    const localClickHelper = () => { 
+    const openPost = async() => { 
         const postWithLinkFlairTextAndCommunityText = {
             ...props.postData,
             linkFlairText: linkFlairText,
             communityText: communityText
         }
         props.allOpeners.openSelectedPost(postWithLinkFlairTextAndCommunityText);
-        const {commentCount, postID, ...post} = props.postData;
-        const updatedPost = {...post, views: props.postData.views += 1};
-        axios.put(`http://127.0.0.1:8000/posts/${props.postData.postID}`, updatedPost)
-        .then((res) => {
-            axios.get(`http://127.0.0.1:8000/posts/`)
-            .then((res) => {
-                props.allUpdaters.updatePosts([...res.data]);
-                props.allUpdaters.setSelectedItem(null);
-            })
-            .catch((e) => {
-                console.error(e);
-            })
-        })
-        .catch((e) => {
-            console.error(e);
-        })
+        let res1 = await axios.get(`http://127.0.0.1:8000/posts/${props.postData.postID}`)
+        const updatedPost = {...res1.data[0], views: res1.data[0].views + 1}
+        await axios.put(`http://127.0.0.1:8000/posts/view/${props.postData.postID}`, updatedPost)
+        props.allUpdaters.setSelectedItem(null);
     }
     
 
@@ -39,10 +27,11 @@ const Post = (props) => {
         const temp = async () => {
             try{
                 const res1 = await axios.get(`http://127.0.0.1:8000/communities/posts/${props.postData.postID}`)
-                setCommunityText((res1.data[0]).name);
-                if(props.postData.linkFlairID !== ''){
-                    const res2 = await axios.get(`http://127.0.0.1:8000/linkFlairs/${props.postData.linkFlairID}`)
-                    setLinkFlairText(res2.data[0].content);
+                setCommunityText((res1.data[0])?.name || "");
+                const res2 = await axios.get(`http://127.0.0.1:8000/posts/${props.postData.postID}`)
+                if(res2.data[0].linkFlairID){
+                    const res3 = await axios.get(`http://127.0.0.1:8000/linkFlairs/${res2.data[0].linkFlairID}`)
+                    setLinkFlairText(res3.data[0].content)
                 }
             }
             catch(e){
@@ -53,7 +42,7 @@ const Post = (props) => {
     }, [props.allData.selectedItem])
 
     return(
-        <div className="post" onClick={localClickHelper}>
+        <div className="post" onClick={openPost}>
             <div className="post-banner-div">
                 <h1 className="post-info h1-fixer">{props.allData.selectedItem ? (props.allData.selectedItem.includes("communities/") ? '' : communityText + ' | ') : communityText + ' | '}{props.postData.postedBy} | {timestamp(props.postData.postedDate)}</h1>
                 <h1 className="post-title h1-fixer">{props.postData.title}</h1>

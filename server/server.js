@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const PORT = process.env.PORT || 8000;
 
 const Comment = require('./models/comments');
 const Community = require('./models/communities');
@@ -21,12 +22,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// const auth = require('./controllers/authController');
-// const protectedRoute = require('./routes/protectedRoute');
-// app.use(express.json());
-// app.use('/auth', userRouter);
-// app.use('/protected', protectedRoute);
-
 app.use('/comments', require('./routes/comments'));
 app.use('/communities', require('./routes/communities'));
 app.use('/linkFlairs', require('./routes/linkflairs'));
@@ -36,7 +31,7 @@ app.use('/auth', require('./routes/auth'))
 
 mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
 .then(() => {
-    const server = app.listen(8000, () => {console.log("Server listening on port 8000...")});
+    const server = app.listen(PORT, () => {console.log(`Server listening on port ${PORT}...`)});
     app.get("/", async (req, res) => {
         try{
             const comments = await Comment.find({});
@@ -60,7 +55,8 @@ mongoose.connect("mongodb://127.0.0.1:27017/phreddit")
 
 })
 
-const db = mongoose.connection;
-app.delete("/reset_database", async (req, res) => {
-    db.dropDatabase();
-})
+app.get('/port', (req, res) => {
+    res.status(200).send(PORT);
+});
+
+module.exports = {app}

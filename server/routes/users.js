@@ -4,7 +4,7 @@ const usersController = require('../controllers/usersController');
 const authController = require('../controllers/authController');
 
 //Get all Users
-router.get('/', usersController.getAllUsers);
+router.get('/', authController.authenticateUser, authController.authorizeAdmin, usersController.getAllUsers);
 
 //Get User by ID
 router.get('/:userID', usersController.getUserByID);
@@ -13,7 +13,7 @@ router.get('/:userID', usersController.getUserByID);
 router.get('/reputation/displayName/:displayName', usersController.getUserReputationByDisplayName);//add proctective middleware here or no?
 
 //get user's votes ONLY by display name
-router.get('/votes/displayName/:displayName', authController.authenticateUser, usersController.getUserVotesByDisplayName);
+router.get('/votes/displayName/:displayName', /*authController.authenticateUser, */usersController.getUserVotesByDisplayName);
 
 //Update a User
 router.put('/:userID', authController.authenticateUser, usersController.updateUser);
@@ -23,9 +23,12 @@ router.put('/displayName/:displayName', authController.authenticateUser, usersCo
 
 //*After CRUD operations*
 //Get User by displayName
-router.get('/displayName/:displayName', usersController.getUserByDisplayName);
+router.get('/displayName/:displayName', authController.authenticateUser, authController.authorizeAdmin, usersController.getUserByDisplayName);
 
 //Get User by email
 router.get('/email/:email', usersController.getUserByEmail);
+
+//delete user by id
+router.delete('/:userID', authController.authenticateUser, authController.authorizeAdmin, usersController.deleteUser)
 
 module.exports = router;

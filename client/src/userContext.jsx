@@ -20,7 +20,8 @@ export function UserContextProvider({children}){
                             id: res.data[0]._id,
                             userVotes: res.data[0].userVotes,
                             reputation: res.data[0].reputation,
-                            accountCreationDate: res.data[0].accountCreationDate
+                            accountCreationDate: res.data[0].accountCreationDate,
+                            role: res.data[0].rol
                         }
                         setUser(user);
                     })

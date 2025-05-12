@@ -45,7 +45,7 @@ const loginUser = async (req, res) => {
             return res.status(404).send({error: "Incorrect email or password"});
         }
         
-        const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET);
+        const token = jwt.sign({userID: user._id, role: user.role}, process.env.JWT_SECRET);
         return res.cookie("token", token, {
             httpOnly: true, secure: true, sameSite: "None"}).status(200).json({
                 success: true,
@@ -55,7 +55,8 @@ const loginUser = async (req, res) => {
                     id: user._id,
                     userVotes: user.userVotes,
                     reputation: user.reputation,
-                    accountCreationDate: user.accountCreationDate
+                    accountCreationDate: user.accountCreationDate,
+                    role: user.role
                 }
             })
     }
@@ -123,6 +124,15 @@ const authenticateUser = (req, res, next) => {
     }
 };
 
+//Authenticate admin
+const authorizeAdmin = (req, res, next) => {
+    const {token} = req.cookies;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if(decoded.role !== "admin"){
+        return res.status(403).json({message: "Access denied"});
+    }
+    next();
+}
 
-const authController = {registerUser, loginUser, logoutUser, getUserProfile, guestUser, authenticateUser};
+const authController = {registerUser, loginUser, logoutUser, getUserProfile, guestUser, authenticateUser, authorizeAdmin};
 module.exports = authController;

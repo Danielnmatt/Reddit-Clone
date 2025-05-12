@@ -50,7 +50,7 @@ const CommentItem = (props) => {
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {
         console.error(e);
-        if((e.status === 401 || e.status === 403) && !happenedAlready){
+        if((e.status === 401 || e.status === 403) && !happenedAlready && isLoggedIn){
             happenedAlready = true;
             alert("Your session is expired or invalidated. You will be redirected.");
             axios.get("http://127.0.0.1:8000/auth/logout").then(res => console.log("logout success")).catch(e => console.log("logout unsuccessful"));

@@ -3,6 +3,7 @@ import '../stylesheets/App.css'
 import {useNavigate} from 'react-router-dom'
 import {useRef, useEffect, useState} from 'react'
 import axios from 'axios'
+
 axios.defaults.withCredentials = true;
 
 const Banner = (props) => {
@@ -58,23 +59,11 @@ const Banner = (props) => {
         props.allUpdaters.setSearchTerms(e.target.value.toLowerCase().trim());
     }
 
-    //temptemptemptemp
-    const deleteDatabase = () =>{
-        axios.delete('http://127.0.0.1:8000/reset_database')
-        .then((res) => {
-            console.log("Dropped database");
-        })
-        .catch((e) => {
-            console.error(e);
-        })
-    }
-
     return (
         <div id="banner" className="banner">
             <div id="top-left">
                 <button id="reddit-logo-clickable-button">
-                    {/*BANANAS : CHANGE TO HANDLE PHREDDIT THING*/}
-                    <img id="reddit-logo" src={require("../images/Reddit_logo2.png")} alt="phreddit logo" onClick={deleteDatabase}/>
+                    <img id="reddit-logo" src={require("../images/Reddit_logo2.png")} alt="phreddit logo" onClick={handlePhredditLogo}/>
                 </button>
                 <h1 id="title" className='h1-fixer' onClick={handlePhredditLogo}>phreddit</h1>
             </div>

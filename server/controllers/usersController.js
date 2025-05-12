@@ -90,7 +90,12 @@ const updateUserByDisplayName = async (req, res) =>{
 //Get User by displayName
 const getUserByDisplayName = async (req, res) =>{
     try{
-        const user = await User.find({"displayName" : { $regex : new RegExp(req.params.displayName, "i")}});
+        const user = await User.find({
+            displayName: { 
+                $regex: `^${req.params.displayName}$`, 
+                $options: 'i' 
+            }
+        });
         if(!user){
             return res.status(404).send({error: "User not found (not matching displayName)."});
         }
@@ -116,5 +121,18 @@ const getUserByEmail = async (req, res) =>{
     }
 }
 
-const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail, updateUserByDisplayName, getUserReputationByDisplayName, getUserVotesByDisplayName};
+const deleteUser = async (req, res) => {
+    try {
+        const deletedUser = await User.findByIdAndDelete(req.params.userID);
+        if(!deletedUser){
+            return res.status(404).send({error: "User not found."});
+        }
+        res.send({message: "User deleted successfully."});
+    } 
+    catch(e){
+        res.status(500).send({error: "Deleting User failed."});
+    }
+}
+
+const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail, updateUserByDisplayName, getUserReputationByDisplayName, getUserVotesByDisplayName, deleteUser};
 module.exports = usersController;

@@ -16,12 +16,15 @@ router.get('/:commentID', commentsController.getCommentByID);
 router.put('/:commentID', authController.authenticateUser, commentsController.updateComment);
 
 //Delete a Comment
-router.delete('/:commentID', commentsController.deleteComment);
+router.delete('/:commentID', authController.authenticateUser, commentsController.deleteComment);
 
 //Get Comments by Post ID
 router.get('/posts/:postID', commentsController.getCommentsByPostID);
 
-//Delete comments and its replies
-router.delete('/comments/:commentID', commentsController.deleteCommentAndReplies);
+//get comments by display name
+router.get('/displayName/:displayName', commentsController.getCommentsByDisplayName);
+
+//SOMETING HERE
+router.delete('/comments/:commentID', authController.authenticateUser, commentsController.deleteCommentAndReplies);
 
 module.exports = router;

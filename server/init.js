@@ -64,7 +64,8 @@ function createAdmin(adminObj) {
         displayName: adminObj.displayName,
         password: adminObj.password,
         reputation: 1000,
-        accountCreationDate: Date.now()
+        accountCreationDate: Date.now(),
+        role: "admin"
     })
     return newAdminUser.save();
 }
@@ -75,7 +76,8 @@ function createUser(userObj) {
         displayName: userObj.displayName,
         password: userObj.password,
         reputation: 100,
-        accountCreationDate: Date.now()
+        accountCreationDate: userObj.accountCreationDate,
+        role: "user"
     })
     return newUser.save();
 }
@@ -276,37 +278,44 @@ async function initializeDB() {
     const user1 = {
         email: "bigfeet@gmail.com",
         displayName: "bigfeet",
-        password: await bcrypt.hash("password123", salt)
+        password: await bcrypt.hash("password123", salt),
+        accountCreationDate: new Date('May 4, 2023 08:32:00'),
     }
     const user2 = {
         email: "outtheretruth47@gmail.com",
         displayName: "outtheretruth47",
-        password: await bcrypt.hash("password123", salt)
+        password: await bcrypt.hash("password123", salt),
+        accountCreationDate: new Date('May 4, 2022 08:32:00'),
     }
     const user3 = {
         email: "astyanax@gmail.com",
         displayName: "astyanax",
-        password: await bcrypt.hash("password123", salt)
+        password: await bcrypt.hash("password123", salt),
+        accountCreationDate: new Date('May 4, 2021 08:32:00'),
     }
     const user4 = {
         email: "rollo@gmail.com",
         displayName: "rollo",
-        password: await bcrypt.hash("password123", salt)
+        password: await bcrypt.hash("password123", salt),
+        accountCreationDate: new Date('May 4, 2020 08:32:00'),
     }
     const user5 = {
         email: "shemp@gmail.com",
         displayName: "shemp",
-        password: await bcrypt.hash("password123", salt)
+        password: await bcrypt.hash("password123", salt),
+        accountCreationDate: new Date('May 4, 2019 08:32:00'),
     }
     const user6 = {
         email: "trucknutz69@gmail.com",
         displayName: "trucknutz69",
-        password: await bcrypt.hash("password123", salt)
+        password: await bcrypt.hash("password123", salt),
+        accountCreationDate: new Date('May 4, 2018 08:32:00'),
     }
     const user7 = {
         email: "MarcoArelius@gmail.com",
         displayName: "MarcoArelius",
-        password: await bcrypt.hash("password123", salt)
+        password: await bcrypt.hash("password123", salt),
+        accountCreationDate: new Date('May 4, 2017 08:32:00'),
     }
     const user8 = {
         email: "catlady13@gmail.com",

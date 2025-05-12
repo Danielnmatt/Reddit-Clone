@@ -12,11 +12,14 @@ router.post('/', authController.authenticateUser, postsController.createPost);
 //Get Post by ID
 router.get('/:postID', postsController.getPostByID);
 
-//Update a Post
+//Update a Post NOT FOR VIEWS
 router.put('/:postID', authController.authenticateUser, postsController.updatePost);
 
+//update a post FOR VIEWS ONLY
+router.put('/view/:postID', postsController.updatePost);
+
 //Delete a Post
-router.delete('/:postID', postsController.deletePost);
+router.delete('/:postID', authController.authenticateUser, postsController.deletePost);
 
 //Get all posts by Display Name
 router.get('/posts/:displayName', authController.authenticateUser, postsController.getPostsByDisplayName);

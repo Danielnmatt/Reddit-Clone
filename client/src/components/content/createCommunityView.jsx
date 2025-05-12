@@ -10,6 +10,7 @@ axios.defaults.withCredentials = true;
 const CreateCommunityView = (props) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const isLoggedIn = props.allData?.user?.displayName !== "guest" && props.allData?.user?.email !== null;
     const navigate = useNavigate();
 
     const resetInputs = () => {
@@ -35,7 +36,7 @@ const CreateCommunityView = (props) => {
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {
         console.error(e);
-        if((e.status === 401 || e.status === 403) && !happenedAlready){
+        if((e.status === 401 || e.status === 403) && !happenedAlready && isLoggedIn){
             happenedAlready = true;
             alert("Your session is expired or invalidated. You will be redirected.");
             axios.get("http://127.0.0.1:8000/auth/logout").then(() => console.log("logout success")).catch(() => console.log("logout unsuccessful"));
@@ -121,6 +122,75 @@ const CreateCommunityView = (props) => {
         }
     }
 
+    const handleDeleteCommunity = async (e) => {
+        e.preventDefault();
+
+        let resp = window.confirm("Are you sure you want to delete this community? This involves deleting all posts and comments associated with the community.");
+        if(!resp){
+            return;
+        }
+
+        const res0 = await axios.get(`http://127.0.0.1:8000/${props.editingCommunity.url}`);
+        const associatedPostIDs = res0.data[0].postIDs;
+        
+        const associatedPosts = [];
+        for(const postID of associatedPostIDs){
+            let res0_5 = await axios.get(`http://127.0.0.1:8000/posts/${postID}`);
+            associatedPosts.push(res0_5.data[0]);
+        }
+
+        const res1 = await axios.get("http://127.0.0.1:8000/comments");
+        const allComments = res1.data;
+
+        for(const post of associatedPosts){
+            let postComments = [];
+            let commentIDs = post.commentIDs;
+            
+            if(commentIDs && commentIDs.length > 0){
+                let somethingWasAdded;
+                do {
+                    somethingWasAdded = false;
+                    for(let c = 0; c < allComments.length; c++){
+                        const comment = allComments[c];
+                        const newCommentID = comment.url.replace("comments/", "");
+                        if((!postComments.includes(comment)) && (commentIDs.includes(newCommentID))){
+                            postComments.push(comment);
+                            somethingWasAdded = true;
+                        }
+                        else if((!postComments.includes(comment)) && (postComments.some(parentComment => parentComment.commentIDs.includes(newCommentID)))){
+                            postComments.push(comment);
+                            somethingWasAdded = true;
+                        }
+                    }
+                } while (somethingWasAdded);
+        
+                //deleting all comments associated with this post
+                for(const comment of postComments){
+                    await axios.delete(`http://127.0.0.1:8000/${comment.url}`);
+                }
+            }
+            //delete post itself
+            await axios.delete(`http://127.0.0.1:8000/${post.url}`);
+        }
+
+        //deleting community
+        await axios.delete(`http://127.0.0.1:8000/${res0.data[0].url}`);
+
+        //updates
+        const res3 = await axios.get("http://127.0.0.1:8000/comments");
+        props.allUpdaters.updateComments(res3.data);
+        const res4 = await axios.get("http://127.0.0.1:8000/posts");
+        props.allUpdaters.updatePosts(res4.data);
+        const res5 = await axios.get("http://127.0.0.1:8000/communities");
+        props.allUpdaters.updateCommunities(res5.data)
+
+        resetInputs();
+        props.allUpdaters.setSearchTerms("");
+        props.allUpdaters.setSelectedSortButton("newest-button");
+        props.allUpdaters.setSelectedItem("home-button");
+        props.allOpeners.openHomePage();
+    }
+
     return(
         <div id="create-community-view">
             <h1 id="create-community-view-title" className='h1-fixer'>{props.allData.selectedItem === "edit-community-button" ? `Editing '${props.editingCommunity.name}'` : "Create a New Community"}</h1>
@@ -134,7 +204,10 @@ const CreateCommunityView = (props) => {
                         <label className="community-label" htmlFor="community-description">Community Description (required, max 500 characters):&nbsp;<span className="red-stars">*</span></label>
                         <textarea onChange={(e) => setDescription(e.target.value)} className="community-input-field" type="text" id="community-description" name="community-description" maxLength="500" placeholder="Description..." value={description} required></textarea>
                     </div>
-                    <button id="engender-community-button" type="submit" onClick={engenderCommunity}>{props.allData.selectedItem === 'edit-community-button' ? "Confirm Edit" : "Engender Community"}</button>
+                    <div style={{display: "flex", flexDirection: 'row'}}>
+                        <button className="handle-community-button" type="submit" onClick={engenderCommunity}>{props.allData.selectedItem === 'edit-community-button' ? "Confirm Edit" : "Engender Community"}</button>
+                        <button className="handle-community-button" onClick={(e) => handleDeleteCommunity(e)} style={{display: props.allData.selectedItem === 'edit-community-button' ? 'inline' : 'none'}}>Delete Community</button>
+                    </div>
                 </div>
             </form>
         </div>
