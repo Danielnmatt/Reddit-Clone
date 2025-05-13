@@ -31,7 +31,7 @@ const SelectedPost = (props) => {
         setUserDN(props.allData?.user?.displayName || "");
         setNumVotes(props.post?.votes || 0);
         setPosterDN(props.post?.postedBy || "");
-    }, [props.allData.user?.reputation, props.allData?.user?.displayName, props.post?.votes, props.post?.postedBy]);
+    }, [props.allData.user?.reputation, props.allData?.user?.displayName, props.post?.votes, props.post?.postedBy, props.allData.selectedItem]);
     
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {

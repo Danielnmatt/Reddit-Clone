@@ -9,11 +9,6 @@
 ** to handle the addition of users to the data model.
 */
 
-// initializeDB.js - Will add initial application data to MongoDB database
-// Run this script to test your schema
-// Start the mongoDB service as a background process before running the script
-// Pass URL of your mongoDB instance as first argument
-// (e.g., mongodb://127.0.0.1:27017/phreddit)
 const bcrypt = require('bcrypt');
 
 const mongoose = require('mongoose');
