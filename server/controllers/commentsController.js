@@ -105,8 +105,6 @@ const deleteCommentAndReplies = async (req, res) =>{
         const allComments = await Comment.find({});
         await Promise.all(allComments.map(async(comment) => {
             if(comment.commentIDs.includes(originalComment._id.toString())){
-                console.log(comment)
-                console.log(originalComment)
                 await Comment.findByIdAndUpdate(comment._id, {
                     commentIDs: comment.commentIDs.filter(commentID => 
                         commentID.toString() !== originalComment._id.toString()

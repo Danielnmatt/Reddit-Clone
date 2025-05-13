@@ -35,7 +35,6 @@ export default function Phreddit(props) {
     const [showProfileView, setShowProfieView] = useState(false);
     
     useEffect(() => {
-        console.log("User : ", user);
         axios.get("http://127.0.0.1:8000/")
         .then(async (res) => {
             setCommunities(res.data.communities);

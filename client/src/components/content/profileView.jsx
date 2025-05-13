@@ -172,12 +172,20 @@ const ProfileView = (props) => {
     }, [props.allData.selectedItem, props.allData?.user?.reputation, props.allData?.user?.displayName, selectedViewButton, userDN]);
     
     useEffect(() => {
-        if(props.allData.selectedItem === 'profile-button'){
-            setSelectedViewButton('profiles-button');
-            changeListingView("profiles-button")
-            
-            setAdminViewingUser(false);
+        const temp = async() => {
+            try{
+                const res = await axios.get(`http://127.0.0.1:8000/users/role/${props.allData?.user?.id}`)
+                if(props.allData.selectedItem === 'profile-button' && res.data === "admin"){
+                    setSelectedViewButton('profiles-button');
+                    changeListingView("profiles-button")
+                    setAdminViewingUser(false);
+                }
+            }
+            catch(e){
+                console.error(e)
+            }
         }
+        temp()
     }, [props.allData.selectedItem])
     let happenedAlready = false;
     const handlePossibleBadAuthentication = e => {

@@ -134,5 +134,19 @@ const deleteUser = async (req, res) => {
     }
 }
 
-const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail, updateUserByDisplayName, getUserReputationByDisplayName, getUserVotesByDisplayName, deleteUser};
+//Get role
+const getRole = async (req, res) => {
+    try{
+        const user = await User.findById(req.params.userID);
+        if(!user){
+            return res.status(404).send({error: "User not found."});
+        }
+        res.status(200).send(user.role);
+    }
+    catch(e){
+        console.error(e);
+    }
+}
+
+const usersController = {getAllUsers, getUserByID, updateUser, getUserByDisplayName, getUserByEmail, updateUserByDisplayName, getUserReputationByDisplayName, getUserVotesByDisplayName, deleteUser, getRole};
 module.exports = usersController;

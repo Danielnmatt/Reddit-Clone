@@ -31,4 +31,6 @@ router.get('/email/:email', usersController.getUserByEmail);
 //delete user by id
 router.delete('/:userID', authController.authenticateUser, authController.authorizeAdmin, usersController.deleteUser)
 
+//Get user role
+router.get('/role/:userID', authController.authenticateUser, usersController.getRole)
 module.exports = router;

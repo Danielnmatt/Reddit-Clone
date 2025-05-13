@@ -56,7 +56,6 @@ const ContentHeader = (props) => {
                 axios.get(`http://127.0.0.1:8000/communities/`)
                 .then((res) => {
                     props.allUpdaters.updateCommunities(res.data);
-                    console.log(res.data[0].members);
                 })
             })
             .finally(() => setIsProcessingCommunityAction(prev => prev + 1))
@@ -68,7 +67,6 @@ const ContentHeader = (props) => {
                 axios.get(`http://127.0.0.1:8000/communities/`)
                 .then((res) => {
                     props.allUpdaters.updateCommunities(res.data);
-                    console.log(res.data[0].members);
                 })
             })
             .finally(() => setIsProcessingCommunityAction(prev => prev + 1))
